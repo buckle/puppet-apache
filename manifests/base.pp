@@ -37,14 +37,14 @@ class apache::base {
   }
 
   user { "apache user":
-    name    => $apache::params::apache_user,
+    name    => $apache::params::http_user,
     ensure  => present,
     require => Package["apache"],
     shell   => "/sbin/nologin",
   }
 
   group { "apache group":
-    name    => $apache::params::apache_user,
+    name    => $apache::params::http_user,
     ensure  => present,
     require => Package["apache"],
   }

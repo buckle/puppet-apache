@@ -19,6 +19,6 @@ class apache::params {
     }
   }
 
-  $access_log = "${log}/access_log"
-  $error_log = "${log}/error_log"
+  $access_log = "${log_dir}/access_log"
+  $error_log = "${log_dir}/error_log"
 }
