@@ -49,7 +49,7 @@ define apache::auth::htdigest (
 
       concat::fragment{ "${_userFile}_${username}_${realm}":
         target  => $_authUserFile,
-        content => "${username}:${ream}:${cryptPassword}",
+        content => "${username}:${ream}:${cryptPassword}\n",
       }
     }
   }
