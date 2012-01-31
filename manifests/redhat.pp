@@ -48,7 +48,11 @@ class apache::redhat inherits apache::base {
   }
 
   augeas { "select httpd mpm ${httpd_mpm}":
-    changes => "set /files/etc/sysconfig/httpd/HTTPD /usr/sbin/${httpd_mpm}",
+    lens => "Sysconfig.lns",
+    incl => "/etc/sysconfig/httpd",
+    context => "/files/etc/sysconfig/httpd",
+    changes => [ "set HTTPD /usr/sbin/${httpd_mpm}", ],
+    onlyif => "get HTTPD != /usr/sbin/${httpd_mpm}",
     require => Package["apache"],
     notify  => Service["apache"],
   }
