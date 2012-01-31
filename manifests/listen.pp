@@ -1,7 +1,7 @@
 /*
 == Definition: apache::listen
 
-Adds a "Listen" directive to apache's port.conf file.
+Adds a "Listen" directive to apache's ports.conf file.
 
 Parameters:
 - *ensure*: present/absent.
@@ -20,11 +20,9 @@ define apache::listen ($ensure='present') {
 
   include apache::params
 
-  common::concatfilepart { "apache-ports.conf-${name}":
-    ensure  => $ensure,
-    manage  => true,
+  concat::fragment { "apache-ports.conf-fragment-${name}":
+    target  => "${apache::params::conf}/ports.conf",
     content => "Listen ${name}\n",
-    file    => "${apache::params::conf}/ports.conf",
     require => Package["apache"],
     notify  => Service["apache"],
   }
