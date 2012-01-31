@@ -44,12 +44,15 @@ define apache::auth::htdigest (
       }
 
       if $clearPassword {
-        $cryptPassword = md5("${username}:${realm}:${clearPassword}")
+        $password = md5("${username}:${realm}:${clearPassword}")
+      }
+      else {
+        $password = $cryptPassword
       }
 
       concat::fragment{ "${_userFile}_${username}_${realm}":
         target  => $_authUserFile,
-        content => "${username}:${ream}:${cryptPassword}\n",
+        content => "${username}:${ream}:${password}\n",
       }
     }
   }
