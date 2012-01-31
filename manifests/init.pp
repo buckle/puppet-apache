@@ -14,7 +14,7 @@ Example usage:
 
 */
 class apache {
-  include apache::params, apache::install, apache::service, bke_firewall::http_server
+  include apache::params, bke_firewall::http_server
   case $operatingsystem {
     Debian,Ubuntu:  { include apache::debian}
     RedHat,CentOS:  { include apache::redhat}
