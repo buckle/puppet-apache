@@ -43,7 +43,7 @@ define apache::vhost (
 
     exec { "enable default virtual host from ${name}":
       command => "a2ensite default",
-      unless  => "test -L ${apache::params::conf}/sites-enabled/000-default",
+      unless  => "/usr/bin/test -L ${apache::params::conf}/sites-enabled/000-default",
       notify  => Exec["apache-graceful"],
       require => Package["apache"],
     }
@@ -52,7 +52,7 @@ define apache::vhost (
 
     exec { "disable default virtual host from ${name}":
       command => "a2dissite default",
-      onlyif  => "test -L ${apache::params::conf}/sites-enabled/000-default",
+      onlyif  => "/usr/bin/test -L ${apache::params::conf}/sites-enabled/000-default",
       notify  => Exec["apache-graceful"],
       require => Package["apache"],
     }
@@ -264,7 +264,7 @@ define apache::vhost (
 
       exec { "remove ${apache::params::root}/${name}":
         command => "rm -rf ${apache::params::root}/${name}",
-        onlyif  => "test -d ${apache::params::root}/${name}",
+        onlyif  => "/usr/bin/test -d ${apache::params::root}/${name}",
         require => Exec["disable vhost ${name}"],
       }
 
