@@ -6,7 +6,7 @@ define apache::auth::digest::file::user (
   $authUserFile=false,
   $users="valid-user"){
 
-  $fname = regsubst($name, "\s", "_", "G")
+  $fname = regsubst($name, "\s\/", "_", "G")
 
   include apache::params
   include concat::setup
