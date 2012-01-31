@@ -21,7 +21,7 @@ define apache::listen ($ensure='present') {
   include apache::params
 
   concat::fragment { "apache-ports.conf-fragment-${name}":
-    target  => "${apache::params::conf}/ports.conf",
+    target  => "${apache::params::conf_dir}/ports.conf",
     content => "Listen ${name}\n",
     require => Package["apache"],
     notify  => Service["apache"],

@@ -131,7 +131,7 @@ define apache::vhost-ssl (
   include apache::params
 
   $wwwuser = $user ? {
-    ""      => $apache::params::user,
+    ""      => $apache::params::apache_user,
     default => $user,
   }
 

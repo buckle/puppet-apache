@@ -8,8 +8,8 @@ User_Alias APACHE_ADMIN = %apache-admin
 <% if has_variable?("sudo_apache_admin_cmnd") -%>
 Cmnd_Alias APACHE_ADMIN = <%= sudo_apache_admin_cmnd %>
 <% else -%>
-Cmnd_Alias APACHE_ADMIN = /etc/init.d/<%= wwwpkgname %>, /bin/su <%= wwwuser %>, /bin/su - <%= wwwuser %>, <%= distro_specific_apache_sudo %>
+Cmnd_Alias APACHE_ADMIN = /etc/init.d/<%= scope.lookupvar("apache::params::package_name") %>, /bin/su <%= scope.lookupvar("apache::params::http_user") %>, /bin/su - <%= scope.lookupvar("apache::params::http_user") %>, <%= distro_specific_apache_sudo %>
 <% end -%>
-APACHE_ADMIN ALL=(<%= wwwuser %>) ALL : ALL=(root) APACHE_ADMIN
+APACHE_ADMIN ALL=(<%= scope.lookupvar("apache::params::http_user") %>) ALL : ALL=(root) APACHE_ADMIN
 ##
 

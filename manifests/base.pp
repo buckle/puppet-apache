@@ -25,10 +25,10 @@ class apache::base {
     require => Package["apache"],
   }
 
-  concat { "${apache::params::conf}/ports.conf": }
+  concat { "${apache::params::conf_dir}/ports.conf": }
 
   file {"log directory":
-    path => $apache::params::log,
+    path => $apache::params::log_dir,
     ensure => directory,
     mode => 700,
     owner => "root",
@@ -37,25 +37,25 @@ class apache::base {
   }
 
   user { "apache user":
-    name    => $apache::params::user,
+    name    => $apache::params::apache_user,
     ensure  => present,
     require => Package["apache"],
     shell   => "/sbin/nologin",
   }
 
   group { "apache group":
-    name    => $apache::params::user,
+    name    => $apache::params::apache_user,
     ensure  => present,
     require => Package["apache"],
   }
 
   package { "apache":
-    name   => $apache::params::pkg,
+    name   => $apache::params::package_name,
     ensure => installed,
   }
 
   service { "apache":
-    name       => $apache::params::pkg,
+    name       => $apache::params::package_name,
     ensure     => running,
     enable     => true,
     hasrestart => true,
@@ -91,7 +91,7 @@ class apache::base {
   }
 
   file {"default virtualhost":
-    path    => "${apache::params::conf}/sites-available/default",
+    path    => "${apache::params::conf_dir}/sites-available/default",
     ensure  => present,
     content => template("apache/default-vhost.erb"),
     require => Package["apache"],

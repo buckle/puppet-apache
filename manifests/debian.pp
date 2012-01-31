@@ -14,7 +14,7 @@ class apache::debian inherits apache::base {
   }
 
   File["default status module configuration"] {
-    path => "${apache::params::conf}/mods-available/status.conf",
+    path => "${apache::params::conf_dir}/mods-available/status.conf",
     source => "puppet:///modules/${module_name}/etc/apache2/mods-available/status.conf",
   }
   # END inheritance from apache::base
@@ -51,13 +51,13 @@ class apache::debian inherits apache::base {
     content => "<html><body><h1>It works!</h1></body></html>\n",
   }
 
-  file { "${apache::params::conf}/conf.d/servername.conf":
+  file { "${apache::params::conf_dir}/conf.d/servername.conf":
     content => "ServerName ${fqdn}\n",
     notify  => Service["apache"],
     require => Package["apache"],
   }
 
-  file { "${apache::params::conf}/sites-available/default-ssl":
+  file { "${apache::params::conf_dir}/sites-available/default-ssl":
     ensure => absent,
     force => true,
   }

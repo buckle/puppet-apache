@@ -13,7 +13,7 @@ class apache::administration {
 
   # used in erb template
   $wwwpkgname = $apache::params::pkg
-  $wwwuser    = $apache::params::user
+  $wwwuser    = $apache::params::apache_user
 
   sudo::directive { "apache-administration":
     ensure => present,

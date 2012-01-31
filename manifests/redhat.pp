@@ -9,7 +9,7 @@ class apache::redhat inherits apache::base {
   }
 
   Package["apache"] {
-    require => [File["/usr/local/sbin/a2ensite"], File["/usr/local/sbin/a2dissite"], File["/usr/local/sbin/a2enmod"], File["/usr/local/sbin/a2dismod"]],
+    require => [File["${apache::params::a2scripts_dir}/a2ensite"], File["${apache::params::a2scripts_dir}/a2dissite"], File["${apache::params::a2scripts_dir}/a2enmod"], File["${apache::params::a2scripts_dir}/a2dismod"]],
   }
 
   # $httpd_pid_file is used in template logrotate-httpd.erb
@@ -23,7 +23,7 @@ class apache::redhat inherits apache::base {
   }
 
   File["default status module configuration"] {
-    path => "${apache::params::conf}/conf.d/status.conf",
+    path => "${apache::params::conf_dir}/conf.d/status.conf",
     source => "puppet:///modules/${module_name}/etc/httpd/conf/status.conf",
   }
 
@@ -32,7 +32,7 @@ class apache::redhat inherits apache::base {
   }
   # END inheritance from apache::base
 
-  file { ["/usr/local/sbin/a2ensite", "/usr/local/sbin/a2dissite", "/usr/local/sbin/a2enmod", "/usr/local/sbin/a2dismod"]:
+  file { ["${apache::params::a2scripts_dir}/a2ensite", "${apache::params::a2scripts_dir}/a2dissite", "${apache::params::a2scripts_dir}/a2enmod", "${apache::params::a2scripts_dir}/a2dismod"]:
     ensure => present,
     mode => 755,
     owner => "root",
@@ -54,9 +54,9 @@ class apache::redhat inherits apache::base {
   }
 
   file { [
-      "${apache::params::conf}/sites-available",
-      "${apache::params::conf}/sites-enabled",
-      "${apache::params::conf}/mods-enabled"
+      "${apache::params::conf_dir}/sites-available",
+      "${apache::params::conf_dir}/sites-enabled",
+      "${apache::params::conf_dir}/mods-enabled"
     ]:
     ensure => directory,
     mode => 644,
@@ -66,7 +66,7 @@ class apache::redhat inherits apache::base {
     require => Package["apache"],
   }
 
-  file { "${apache::params::conf}/conf/httpd.conf":
+  file { "${apache::params::conf_dir}/conf/httpd.conf":
     ensure => present,
     content => template("apache/httpd.conf.erb"),
     seltype => "httpd_config_t",
@@ -77,7 +77,7 @@ class apache::redhat inherits apache::base {
   # the following command was used to generate the content of the directory:
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
-  file { "${apache::params::conf}/mods-available":
+  file { "${apache::params::conf_dir}/mods-available":
     ensure => directory,
     source => $lsbmajdistrelease ? {
       5 => "puppet:///modules/${module_name}/etc/httpd/mods-available/redhat5/",
@@ -106,7 +106,7 @@ class apache::redhat inherits apache::base {
 
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
-  file { "${apache::params::conf}/conf.d/proxy_ajp.conf":
+  file { "${apache::params::conf_dir}/conf.d/proxy_ajp.conf":
     ensure => absent,
     require => Package["apache"],
     notify => Exec["apache-graceful"],

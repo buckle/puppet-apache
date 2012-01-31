@@ -7,8 +7,8 @@ define apache::module ($ensure='present') {
       Package["apache"],
       File["/etc/httpd/mods-available"],
       File["/etc/httpd/mods-enabled"],
-      File["/usr/local/sbin/a2enmod"],
-      File["/usr/local/sbin/a2dismod"]
+      File["${apache::params::a2scripts_dir}/a2enmod"],
+      File["${apache::params::a2scripts_dir}/a2dismod"]
     ],
     /Debian|Ubuntu/ => Package["apache"],
   }
@@ -20,13 +20,9 @@ define apache::module ($ensure='present') {
   case $ensure {
     'present' : {
       exec { "a2enmod ${name}":
-        command => $operatingsystem ? {
-          RedHat => "/usr/local/sbin/a2enmod ${name}",
-          CentOS => "/usr/local/sbin/a2enmod ${name}",
-          default => "/usr/sbin/a2enmod ${name}"
-        },
-        unless  => "/bin/sh -c '[ -L ${apache::params::conf}/mods-enabled/${name}.load ] \\
-          && [ ${apache::params::conf}/mods-enabled/${name}.load -ef ${apache::params::conf}/mods-available/${name}.load ]'",
+        command => "${apache::params::a2scripts_dir}/a2enmod ${name}",
+        unless  => "/bin/sh -c '[ -L ${apache::params::conf_dir}/mods-enabled/${name}.load ] \\
+          && [ ${apache::params::conf_dir}/mods-enabled/${name}.load -ef ${apache::params::conf_dir}/mods-available/${name}.load ]'",
         require => $a2enmod_deps,
         notify  => Service["apache"],
       }
@@ -34,12 +30,9 @@ define apache::module ($ensure='present') {
 
     'absent': {
       exec { "a2dismod ${name}":
-        command => $operatingsystem ? {
-          /RedHat|CentOS/ => "/usr/local/sbin/a2dismod ${name}",
-          /Debian|Ubuntu/ => "/usr/sbin/a2dismod ${name}",
-        },
-        onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/mods-enabled/${name}.load ] \\
-          || [ -e ${apache::params::conf}/mods-enabled/${name}.load ]'",
+        command => "${apache::params::a2scripts_dir}/a2dismod ${name}",
+        onlyif  => "/bin/sh -c '[ -L ${apache::params::conf_dir}/mods-enabled/${name}.load ] \\
+          || [ -e ${apache::params::conf_dir}/mods-enabled/${name}.load ]'",
         require => $a2enmod_deps,
         notify  => Service["apache"],
        }

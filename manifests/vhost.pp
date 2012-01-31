@@ -20,7 +20,7 @@ define apache::vhost (
   include apache::params
 
   $wwwuser = $user ? {
-    ""      => $apache::params::user,
+    ""      => $apache::params::apache_user,
     default => $user,
   }
 
@@ -42,8 +42,8 @@ define apache::vhost (
   if $enable_default == true {
 
     exec { "enable default virtual host from ${name}":
-      command => "a2ensite default",
-      unless  => "/usr/bin/test -L ${apache::params::conf}/sites-enabled/000-default",
+      command => "${apache::params::a2scripts_dir}/a2ensite default",
+      unless  => "/usr/bin/test -L ${apache::params::conf_dir}/sites-enabled/000-default",
       notify  => Exec["apache-graceful"],
       require => Package["apache"],
     }
@@ -51,8 +51,8 @@ define apache::vhost (
   } else {
 
     exec { "disable default virtual host from ${name}":
-      command => "a2dissite default",
-      onlyif  => "/usr/bin/test -L ${apache::params::conf}/sites-enabled/000-default",
+      command => "${apache::params::a2scripts_dir}/a2dissite default",
+      onlyif  => "/usr/bin/test -L ${apache::params::conf_dir}/sites-enabled/000-default",
       notify  => Exec["apache-graceful"],
       require => Package["apache"],
     }
@@ -60,7 +60,7 @@ define apache::vhost (
 
   case $ensure {
     present: {
-      file { "${apache::params::conf}/sites-available/${name}":
+      file { "${apache::params::conf_dir}/sites-available/${name}":
         ensure  => present,
         owner   => root,
         group   => root,
@@ -70,7 +70,7 @@ define apache::vhost (
           CentOS => "httpd_config_t",
           default => undef,
         },
-        require => Package[$apache::params::pkg],
+        require => Package[$apache::params::package_name],
         notify  => Exec["apache-graceful"],
       }
 
@@ -154,19 +154,19 @@ define apache::vhost (
       case $config_file {
 
         default: {
-          File["${apache::params::conf}/sites-available/${name}"] {
+          File["${apache::params::conf_dir}/sites-available/${name}"] {
             source => $config_file,
           }
         }
         "": {
 
           if $config_content {
-            File["${apache::params::conf}/sites-available/${name}"] {
+            File["${apache::params::conf_dir}/sites-available/${name}"] {
               content => $config_content,
             }
           } else {
             # default vhost template
-            File["${apache::params::conf}/sites-available/${name}"] {
+            File["${apache::params::conf_dir}/sites-available/${name}"] {
               content => template("apache/vhost.erb"), 
             }
           }
@@ -231,33 +231,29 @@ define apache::vhost (
       }
 
       exec {"enable vhost ${name}":
-        command => $operatingsystem ? {
-          RedHat => "/usr/local/sbin/a2ensite ${name}",
-          CentOS => "/usr/local/sbin/a2ensite ${name}",
-          default => "/usr/sbin/a2ensite ${name}"
-        },
+        command => "${apache::params::a2scripts_dir}/a2ensite ${name}",
         notify  => Exec["apache-graceful"],
         require => [$operatingsystem ? {
-          redhat => File["/usr/local/sbin/a2ensite"],
-          CentOS => File["/usr/local/sbin/a2ensite"],
-          default => Package[$apache::params::pkg]},
-          File["${apache::params::conf}/sites-available/${name}"],
+          redhat => File["${apache::params::a2scripts_dir}/a2ensite"],
+          CentOS => File["${apache::params::a2scripts_dir}/a2ensite"],
+          default => Package[$apache::params::package_name]},
+          File["${apache::params::conf_dir}/sites-available/${name}"],
           File["${apache::params::root}/${name}/htdocs"],
           File["${apache::params::root}/${name}/logs"],
           File["${apache::params::root}/${name}/conf"]
         ],
-        unless  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+        unless  => "/bin/sh -c '[ -L ${apache::params::conf_dir}/sites-enabled/${name} ] \\
+          && [ ${apache::params::conf_dir}/sites-enabled/${name} -ef ${apache::params::conf_dir}/sites-available/${name} ]'",
       }
     }
 
     absent:{
-      file { "${apache::params::conf}/sites-enabled/${name}":
+      file { "${apache::params::conf_dir}/sites-enabled/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
       
-      file { "${apache::params::conf}/sites-available/${name}":
+      file { "${apache::params::conf_dir}/sites-available/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
@@ -269,18 +265,14 @@ define apache::vhost (
       }
 
       exec { "disable vhost ${name}":
-        command => $operatingsystem ? {
-          RedHat => "/usr/local/sbin/a2dissite ${name}",
-          CentOS => "/usr/local/sbin/a2dissite ${name}",
-          default => "/usr/sbin/a2dissite ${name}"
-        },
+        command => "${apache::params::a2scripts_dir}/a2dissite ${name}",
         notify  => Exec["apache-graceful"],
         require => [$operatingsystem ? {
-          redhat => File["/usr/local/sbin/a2ensite"],
-          CentOS => File["/usr/local/sbin/a2ensite"],
-          default => Package[$apache::params::pkg]}],
-        onlyif => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+          redhat => File["${apache::params::a2scripts_dir}/a2ensite"],
+          CentOS => File["${apache::params::a2scripts_dir}/a2ensite"],
+          default => Package[$apache::params::package_name]}],
+        onlyif => "/bin/sh -c '[ -L ${apache::params::conf_dir}/sites-enabled/${name} ] \\
+          && [ ${apache::params::conf_dir}/sites-enabled/${name} -ef ${apache::params::conf_dir}/sites-available/${name} ]'",
       }
    }
 
@@ -288,12 +280,12 @@ define apache::vhost (
       exec { "disable vhost ${name}":
         command => "a2dissite ${name}",
         notify  => Exec["apache-graceful"],
-        require => Package[$apache::params::pkg],
-        onlyif => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+        require => Package[$apache::params::package_name],
+        onlyif => "/bin/sh -c '[ -L ${apache::params::conf_dir}/sites-enabled/${name} ] \\
+          && [ ${apache::params::conf_dir}/sites-enabled/${name} -ef ${apache::params::conf_dir}/sites-available/${name} ]'",
       }
 
-      file { "${apache::params::conf}/sites-enabled/${name}":
+      file { "${apache::params::conf_dir}/sites-enabled/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }

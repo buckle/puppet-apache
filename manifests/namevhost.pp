@@ -24,7 +24,7 @@ define apache::namevhost ($ensure='present') {
   include apache::params
 
   concat::fragment { "apache-namevhost.conf-fragment-${name}":
-    target  => "${apache::params::conf}/ports.conf",
+    target  => "${apache::params::conf_dir}/ports.conf",
     content => "NameVirtualHost ${name}\n",
     require => Package["apache"],
     notify  => Service["apache"],
