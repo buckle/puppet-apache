@@ -106,12 +106,6 @@ class apache::redhat inherits apache::base {
     require => Package["apache"],
   }
 
-  # Disable the welcome page
-  file { "${apache::params::conf_dir}/conf.d/welcome.conf":
-    ensure => absent,
-    notify  => Service["apache"],
-  }
-
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
   file { "${apache::params::conf_dir}/conf.d/proxy_ajp.conf":
