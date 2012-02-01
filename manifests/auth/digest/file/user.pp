@@ -11,7 +11,10 @@ define apache::auth::digest::file::user (
   include apache::params
   include concat::setup
  
-  if defined(Apache::Module["authn_file"]) {} else {
+  if ! defined(Apache::Module["authn_file"]) {
+    apache::module {"authn_file": }
+  }
+  if ! defined(Apache::Module["autn_digest"]) {
     apache::module {"authn_file": }
   }
 
