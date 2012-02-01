@@ -18,6 +18,14 @@ LoadModule ssl_module modules/mod_ssl.so
 ##  the main server and all SSL-enabled virtual hosts.
 ##
 
+<% if operatingsystemversion >= 5.0 and operatingsystem < 6.0 -%>
+#
+#   Some MIME-types for downloading Certificates and CRLs
+#
+AddType application/x-x509-ca-cert .crt
+AddType application/x-pkcs7-crl    .crl
+
+<% end -%>
 #   Pass Phrase Dialog:
 #   Configure the pass phrase gathering process.
 #   The filtering dialog program (`builtin' is a internal
