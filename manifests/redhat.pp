@@ -57,6 +57,11 @@ class apache::redhat inherits apache::base {
     notify  => Service["apache"],
   }
 
+  # Disable the welcome page
+  file { "${apache::params::conf_dir}/welcome.conf":
+    ensure => absent,
+  }
+
   file { [
       "${apache::params::conf_dir}/sites-available",
       "${apache::params::conf_dir}/sites-enabled",
