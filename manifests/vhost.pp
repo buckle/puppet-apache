@@ -10,7 +10,7 @@ define apache::vhost (
   $user="",
   $admin="",
   $group="root",
-  $mode=2570,
+  $mode=2770,
   $aliases=[],
   $enable_default=true,
   $ports=['*:80'],
@@ -20,7 +20,7 @@ define apache::vhost (
   include apache::params
 
   $wwwuser = $user ? {
-    ""      => $apache::params::apache_user,
+    ""      => 'root',
     default => $user,
   }
 
