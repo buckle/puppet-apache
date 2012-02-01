@@ -10,7 +10,7 @@ define apache::vhost (
   $user="",
   $admin="",
   $group="root",
-  $mode=2770,
+  $mode=2570,
   $aliases=[],
   $enable_default=true,
   $ports=['*:80'],
@@ -20,7 +20,7 @@ define apache::vhost (
   include apache::params
 
   $wwwuser = $user ? {
-    ""      => 'root',
+    ""      => $apache::params::http_user,
     default => $user,
   }
 
@@ -94,7 +94,7 @@ define apache::vhost (
           default => $admin,
         },
         group  => $group,
-        mode   => $mode,
+        mode   => "0755",
         seltype => $operatingsystem ? {
           redhat => "httpd_config_t",
           CentOS => "httpd_config_t",
