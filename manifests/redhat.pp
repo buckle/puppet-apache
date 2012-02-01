@@ -50,38 +50,10 @@ class apache::redhat inherits apache::base {
     onlyif => "get HTTPD != /usr/sbin/${httpd_mpm}",
   }
 
-  augeas { "Set ServerAdmin in httpd.conf":
-    lens => "Httpd.lns",
-    incl => "/etc/httpd/conf/httpd.conf",
-    context => "/files/etc/httpd/conf/httpd.conf",
-    changes => [ 'set directive[.="ServerAdmin"]/arg "wsdsupport@buckle.com"', ],
-    onlyif => 'match directive[.="ServerAdmin"]/arg[.="wsdsupport@buckle.com"] size == 0',
-  }
-
-  augeas { "Replace Listen directive with Include in httpd.conf":
-    lens => "Httpd.lns",
-    incl => "/etc/httpd/conf/httpd.conf",
-    context => "/files/etc/httpd/conf/httpd.conf",
-    onlyif => 'match directive[.="Listen"] size > 0',
-    changes => [
-      'ins directive after directive[.="Listen"]',
-      'set directive[.=""]/arg[1] "ports.conf"',
-      'set directive[.=""] "Include"',
-      'rm directive[.="Listen"]',
-    ],
-  }
-
-  augeas { "Replace all entries of LoadModule with one include in httpd.conf":
-    lens => "Httpd.lns",
-    incl => "/etc/httpd/conf/httpd.conf",
-    context => "/files/etc/httpd/conf/httpd.conf",
-    onlyif => 'match directive[.="Include"]/arg[.="mods-enabled/"] size == 0',
-    changes => [
-      'ins directive after directive[.="LoadModule"][last()]',
-      'set directive[.=""]/arg[1] "mods-enabled/"',
-      'set directive[.=""] "Include"',
-      'rm  directive[.="LoadModule"]',
-    ],
+  # Disable the welcome page
+  file { "${apache::params::conf_dir}/conf.d/welcome.conf":
+    ensure => absent,
+    notify  => Service["apache"],
   }
 
   file { [
@@ -94,6 +66,14 @@ class apache::redhat inherits apache::base {
     owner => "root",
     group => "root",
     seltype => "httpd_config_t",
+    require => Package["apache"],
+  }
+
+  file { "${apache::params::conf_dir}/conf/httpd.conf":
+    ensure => present,
+    content => template("apache/httpd.conf.erb"),
+    seltype => "httpd_config_t",
+    notify  => Service["apache"],
     require => Package["apache"],
   }
 
