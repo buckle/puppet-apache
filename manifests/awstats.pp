@@ -4,6 +4,12 @@ class apache::awstats {
     ensure => installed
   }
 
+  if ! defined(Apache::Module["cgi"]) {
+    apache::module { "cgi":
+      ensure => present,
+    }
+  }
+
   # ensure non-managed files are purged from directory
   file {"/etc/awstats":
     ensure  => directory,

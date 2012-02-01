@@ -75,9 +75,8 @@ class apache::base {
   apache::listen { "80": ensure => present }
   apache::namevhost { "*:80": ensure => present }
 
-  apache::module {["alias", "auth_basic", "authn_file", "authz_default", "authz_groupfile", "authz_host", "authz_user", "autoindex", "dir", "env", "mime", "negotiation", "rewrite", "setenvif", "status", "cgi"]:
+  apache::module {["alias", "auth_basic", "authn_file", "authz_groupfile", "authz_host", "authz_user", "dir", "env", "mime", "rewrite", "setenvif", "status",]:
     ensure => present,
-    notify => Exec["apache-graceful"],
   }
 
   file {"default status module configuration":

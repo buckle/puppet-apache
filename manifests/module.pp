@@ -18,23 +18,23 @@ define apache::module ($ensure='present') {
   }
 
   case $ensure {
-    'present' : {
+    'present', 'enabled' : {
       exec { "a2enmod ${name}":
         command => "${apache::params::a2scripts_dir}/a2enmod ${name}",
         unless  => "/bin/sh -c '[ -L ${apache::params::conf_dir}/mods-enabled/${name}.load ] \\
           && [ ${apache::params::conf_dir}/mods-enabled/${name}.load -ef ${apache::params::conf_dir}/mods-available/${name}.load ]'",
         require => $a2enmod_deps,
-        notify  => Service["apache"],
+        notify  => Exec["apache-graceful"],
       }
     }
 
-    'absent': {
+    'absent', 'disabled' : {
       exec { "a2dismod ${name}":
         command => "${apache::params::a2scripts_dir}/a2dismod ${name}",
         onlyif  => "/bin/sh -c '[ -L ${apache::params::conf_dir}/mods-enabled/${name}.load ] \\
           || [ -e ${apache::params::conf_dir}/mods-enabled/${name}.load ]'",
         require => $a2enmod_deps,
-        notify  => Service["apache"],
+        notify  => Exec["apache-graceful"],
        }
     }
 

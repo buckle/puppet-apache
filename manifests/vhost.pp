@@ -32,6 +32,13 @@ define apache::vhost (
     default => $docroot,
   }
 
+  if $cgibin != false {
+    if ! defined(Apache::Module["cgi"]) {
+      apache::module{ "cgi":
+        ensure => present,
+      }
+    }
+  }
   $cgipath = $cgibin ? {
     true    => "${wwwroot}/${name}/cgi-bin/",
     false   => false,
