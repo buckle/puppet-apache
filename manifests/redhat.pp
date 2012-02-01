@@ -13,7 +13,7 @@ class apache::redhat inherits apache::base {
   }
 
   File["default status module configuration"] {
-    path => "${apache::params::conf}/conf.d/status.conf",
+    path => "${apache::params::conf_dir}/conf.d/status.conf",
     source => "puppet:///modules/apache/etc/httpd/conf/status.conf",
   }
 
