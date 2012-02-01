@@ -12,19 +12,9 @@ class apache::redhat inherits apache::base {
     require => [File["${apache::params::a2scripts_dir}/a2ensite"], File["${apache::params::a2scripts_dir}/a2dissite"], File["${apache::params::a2scripts_dir}/a2enmod"], File["${apache::params::a2scripts_dir}/a2dismod"]],
   }
 
-  # $httpd_pid_file is used in template logrotate-httpd.erb
-  $httpd_pid_file = $lsbmajdistrelease ? {
-    /4|5/   => "/var/run/httpd.pid",
-    default => "/var/run/httpd/httpd.pid",
-  }
   File["logrotate configuration"] {
     path    => "/etc/logrotate.d/httpd",
     content => template("apache/logrotate-httpd.erb"),
-  }
-
-  File["default status module configuration"] {
-    path => "${apache::params::conf_dir}/conf.d/status.conf",
-    source => "puppet:///modules/${module_name}/etc/httpd/conf/status.conf",
   }
 
   File["default virtualhost"] {
@@ -47,14 +37,17 @@ class apache::redhat inherits apache::base {
     default    => "httpd.${apache_mpm_type}",
   }
 
+  Augeas {
+    notify  => Service["apache"],
+    require => Package["apache"],
+  }
+
   augeas { "select httpd mpm ${httpd_mpm}":
     lens => "Sysconfig.lns",
     incl => "/etc/sysconfig/httpd",
     context => "/files/etc/sysconfig/httpd",
     changes => [ "set HTTPD /usr/sbin/${httpd_mpm}", ],
     onlyif => "get HTTPD != /usr/sbin/${httpd_mpm}",
-    require => Package["apache"],
-    notify  => Service["apache"],
   }
 
   # Disable the welcome page
@@ -104,7 +97,6 @@ class apache::redhat inherits apache::base {
   # this module is statically compiled on debian and must be enabled here
   apache::module {["log_config"]:
     ensure => present,
-    notify => Exec["apache-graceful"],
   }
 
   # it makes no sens to put CGI here, deleted from the default vhost config
@@ -112,6 +104,12 @@ class apache::redhat inherits apache::base {
     ensure  => absent,
     force   => true,
     require => Package["apache"],
+  }
+
+  # Disable the welcome page
+  file { "${apache::params::conf_dir}/conf.d/welcome.conf":
+    ensure => absent,
+    notify  => Service["apache"],
   }
 
   # no idea why redhat choose to put this file there. apache fails if it's

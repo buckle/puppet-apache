@@ -1,8 +1,6 @@
 # file managed by puppet
 /var/www/vhosts/*/logs/*.log /var/log/httpd/*log {
-    weekly
     missingok
-    rotate 52
     compress
     delaycompress
     notifempty
@@ -14,8 +12,6 @@
         fi
     endscript
     postrotate
-        if [ -f <%= httpd_pid_file %> ]; then
-            /sbin/service httpd reload > /dev/null 2>/dev/null || true
-        fi
+        /sbin/service httpd reload > /dev/null 2>/dev/null || true
     endscript
 }
