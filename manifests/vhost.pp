@@ -6,7 +6,7 @@ define apache::vhost (
   $conf=false,
   $readme=false,
   $docroot=false,
-  $cgibin=true,
+  $cgibin=false,
   $user="",
   $admin="",
   $group="root",
@@ -90,7 +90,7 @@ define apache::vhost (
       file { "${apache::params::root}/${name}/conf":
         ensure => directory,
         owner  => $admin ? {
-          "" => $wwwuser,
+          "" => 'root',
           default => $admin,
         },
         group  => $group,
@@ -218,16 +218,18 @@ define apache::vhost (
       }
 
       # README file
-      file {"${apache::params::root}/${name}/README":
-        ensure  => present,
-        owner   => root,
-        group   => root,
-        mode    => 644,
-        content => $readme ? {
-          false => template("apache/README_vhost.erb"),
-          default => $readme,
-        },
-        require => File["${apache::params::root}/${name}"],
+      if $readme != false {
+        file {"${apache::params::root}/${name}/README":
+          ensure  => present,
+          owner   => root,
+          group   => root,
+          mode    => 644,
+          content => $readme ? {
+            'default' => template("apache/README_vhost.erb"),
+            default   => $readme,
+          },
+          require => File["${apache::params::root}/${name}"],
+        }
       }
 
       exec {"enable vhost ${name}":
