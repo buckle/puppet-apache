@@ -12,6 +12,11 @@ class apache::redhat inherits apache::base {
     require => [File["${apache::params::a2scripts_dir}/a2ensite"], File["${apache::params::a2scripts_dir}/a2dissite"], File["${apache::params::a2scripts_dir}/a2enmod"], File["${apache::params::a2scripts_dir}/a2dismod"]],
   }
 
+  file {"default status module configuration":
+    path => "${apache::params::conf}/conf.d/status.conf",
+    source => "puppet:///modules/apache/etc/httpd/conf/status.conf",
+  }
+
   File["logrotate configuration"] {
     path    => "/etc/logrotate.d/httpd",
     content => template("apache/logrotate-httpd.erb"),
