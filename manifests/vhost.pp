@@ -1,7 +1,7 @@
 define apache::vhost (
   $ensure=present,
   $config_file="",
-  $config_content=false,
+  $config_template=false,
   $htdocs=false,
   $conf=false,
   $readme=false,
@@ -160,9 +160,9 @@ define apache::vhost (
         }
         "": {
 
-          if $config_content {
+          if $config_template {
             File["${apache::params::conf_dir}/sites-available/${name}"] {
-              content => $config_content,
+              content => template($config_template),
             }
           } else {
             # default vhost template
