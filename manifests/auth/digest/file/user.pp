@@ -14,8 +14,8 @@ define apache::auth::digest::file::user (
   if ! defined(Apache::Module["authn_file"]) {
     apache::module {"authn_file": }
   }
-  if ! defined(Apache::Module["authn_digest"]) {
-    apache::module {"authn_digest": }
+  if ! defined(Apache::Module["auth_digest"]) {
+    apache::module {"auth_digest": }
   }
 
   if $authUserFile {
