@@ -79,16 +79,6 @@ class apache::base {
     ensure => present,
   }
 
-  file {"default status module configuration":
-    path => undef,
-    ensure => present,
-    owner => root,
-    group => root,
-    source => undef,
-    require => Module["status"],
-    notify => Exec["apache-graceful"],
-  }
-
   file {"default virtualhost":
     path    => "${apache::params::conf_dir}/sites-available/default",
     ensure  => present,
