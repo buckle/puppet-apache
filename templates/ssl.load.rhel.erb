@@ -18,7 +18,7 @@ LoadModule ssl_module modules/mod_ssl.so
 ##  the main server and all SSL-enabled virtual hosts.
 ##
 
-<% if operatingsystemversion >= 5.0 and operatingsystem < 6.0 -%>
+<% if operatingsystemrelease >= 5.0 and operatingsystemrelease < 6.0 -%>
 #
 #   Some MIME-types for downloading Certificates and CRLs
 #
