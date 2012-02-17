@@ -95,7 +95,7 @@ Example usage:
 define apache::vhost-ssl (
   $ensure=present,
   $config_file="",
-  $config_content=false,
+  $config_template=false,
   $htdocs=false,
   $conf=false,
   $readme=false,
@@ -174,14 +174,13 @@ define apache::vhost-ssl (
   apache::vhost {$name:
     ensure         => $ensure,
     config_file    => $config_file,
-    config_content => $config_content ? {
+    config_template => $config_template ? {
       false => $sslonly ? {
         true => template("apache/vhost-ssl.erb"),
         default => template("apache/vhost.erb", "apache/vhost-ssl.erb"),
       },
-      default      => $config_content,
+      default      => $config_template,
     },
-    config_template => $config_template,
     aliases        => $aliases,
     htdocs         => $htdocs,
     conf           => $conf,
