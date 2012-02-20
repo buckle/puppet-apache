@@ -13,5 +13,6 @@ define apache::dbm_hash($template = undef, $destination) {
   exec { "httxt2dbm ${mapfile}":
     refreshonly => true,
     command => "/usr/sbin/httxt2dbm -i ${destination} -o ${mapfile}",
+    notify => Exec["apache-reload"],
   }
 }
