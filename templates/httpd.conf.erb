@@ -69,16 +69,14 @@ PidFile run/httpd.pid
 # Timeout: The number of seconds before receives and sends time out.
 #
 #Timeout 120
-#TODO parameterize
-Timeout 20
+Timeout <%= timeout %>
 
 #
 # KeepAlive: Whether or not to allow persistent connections (more than
 # one request per connection). Set to "Off" to deactivate.
 #
 #KeepAlive Off
-#TODO parameterize
-KeepAlive On
+KeepAlive <%= keepalive %>
 
 #
 # MaxKeepAliveRequests: The maximum number of requests to allow
@@ -86,16 +84,14 @@ KeepAlive On
 # We recommend you leave this number high, for maximum performance.
 #
 #MaxKeepAliveRequests 100
-#TODO parameterize
-MaxKeepAliveRequests 250
+MaxKeepAliveRequests <%= max_keepalive_requests %>
 
 #
 # KeepAliveTimeout: Number of seconds to wait for the next request from the
 # same client on the same connection.
 #
 #KeepAliveTimeout 15
-#TODO parameterize
-KeepAliveTimeout 2
+KeepAliveTimeout <%= keepalive_timeout %>
 
 ##
 ## Server-Pool Size Regulation (MPM specific)
@@ -108,7 +104,6 @@ KeepAliveTimeout 2
 # ServerLimit: maximum value for MaxClients for the lifetime of the server
 # MaxClients: maximum number of server processes allowed to start
 # MaxRequestsPerChild: maximum number of requests a server process serves
-# TODO: Parameterize
 <IfModule prefork.c>
 StartServers        <%= start_servers %>
 MinSpareServers     <%= min_spare_servers %>

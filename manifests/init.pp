@@ -21,6 +21,10 @@ class apache(
   $max_clients = 256,
   $max_requests_per_child = 4000,
   $threads_per_child = 25,
+  $timeout = 20,
+  $keepalive = 'Off',
+  $max_keepalive_requests = 100,
+  $keepalive_timeout = 15,
   $listen_backlog = 511
   ) {
 
@@ -38,6 +42,7 @@ class apache(
     max_clients            => $max_clients,
     max_requests_per_child => $max_requests_per_child,
     threads_per_child      => $threads_per_child,
+    timeout                => $timeout,
     listen_backlog         => $listen_backlog,
   }
 }
