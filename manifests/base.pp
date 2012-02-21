@@ -13,7 +13,7 @@ class apache::base(
   $max_spare_servers = 20,
   $server_limit = 256,
   $max_clients = 256,
-  $max_requests_per_child = 4000,
+  $max_requests_per_child = 4000
   ) {
 
   include apache::params
