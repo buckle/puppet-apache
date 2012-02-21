@@ -21,7 +21,7 @@ class apache(
   $max_clients = 256,
   $max_requests_per_child = 4000,
   $threads_per_child = 25,
-  $listen_backlog = 511,
+  $listen_backlog = 511
   ) {
 
   include apache::params, bke_firewall::http_server
