@@ -6,7 +6,7 @@ class apache::debian(
   $max_clients,
   $max_requests_per_child,
   $listen_backlog,
-  $timeout,
+  $request_timeout,
   $keepalive,
   $max_keepalive_requests,
   $keepalive_timeout,
