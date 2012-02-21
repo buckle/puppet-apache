@@ -13,18 +13,9 @@ class apache::ssl::redhat inherits apache::base::ssl {
 
   apache::module { "ssl":
     ensure => present,
+    template => "apache/ssl.load.rhel.erb",
     require => File["/etc/httpd/conf.d/ssl.conf"],
     notify => Service["apache"],
     before => Exec["apache-graceful"],
-  }
-
-  file {"/etc/httpd/mods-available/ssl.load":
-    ensure => present,
-    content => template("apache/ssl.load.rhel.erb"),
-    mode => 644,
-    owner => "root",
-    group => "root",
-    seltype => "httpd_config_t",
-    require => File["/etc/httpd/mods-available"],
   }
 }

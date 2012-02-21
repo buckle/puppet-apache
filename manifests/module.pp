@@ -1,4 +1,4 @@
-define apache::module ($ensure='present') {
+define apache::module ($ensure='present',$template = undef) {
 
   include apache::params
 
@@ -17,7 +17,7 @@ define apache::module ($ensure='present') {
     apache::redhat::selinux {$name: }
   }
 
-  if $operatingsystem == "CentOS" or $operatingsystem == "RedHat" and $name != 'ssl' {
+  if $operatingsystem == "CentOS" or $operatingsystem == "RedHat" {
     file { "${apache::params::conf_dir}/mods-available/${name}.load":
       ensure => present,
       mode => 644,
@@ -25,7 +25,10 @@ define apache::module ($ensure='present') {
       group => "root",
       seltype => "httpd_config_t",
       require => Package["apache"],
-      content => inline_template("LoadModule ${name}_module modules/mod_${name}.so\n"),
+      content => $template ? {
+        undef => inline_template("LoadModule ${name}_module modules/mod_${name}.so\n"),
+        default => template("$template"),
+      },
     }
   }
 
