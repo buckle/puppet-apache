@@ -43,6 +43,9 @@ class apache(
     max_requests_per_child => $max_requests_per_child,
     threads_per_child      => $threads_per_child,
     timeout                => $timeout,
+    keepalive              => $keepalive,
+    max_keepalive_requests => $max_keepalive_requests,
+    keepalive_timeout      => $keepalive_timeout,
     listen_backlog         => $listen_backlog,
   }
 }
