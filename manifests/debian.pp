@@ -4,7 +4,9 @@ class apache::debian(
   $max_spare_servers,
   $server_limit,
   $max_clients,
-  $max_requests_per_child
+  $max_requests_per_child,
+  $listen_backlog,
+  $threads_per_child
 ) inherits apache::base {
 
   include apache::params

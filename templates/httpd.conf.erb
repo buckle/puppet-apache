@@ -115,7 +115,7 @@ MinSpareServers     <%= min_spare_servers %>
 MaxSpareServers     <%= max_spare_servers %> 
 ServerLimit         <%= server_limit %>
 MaxClients          <%= max_clients %>
-<% if listen_backlog.to_i > 0 -%>
+<% if listen_backlog.to_i != 511 -%>
 ListenBacklog       <%= listen_backlog %>
 <% end -%>
 MaxRequestsPerChild <%= max_requests_per_child %> 
@@ -134,7 +134,7 @@ MinSpareThreads     <%= min_spare_servers %>
 MaxSpareThreads     <%= max_spare_servers %> 
 ServerLimit         <%= server_limit %>
 MaxClients          <%= max_clients %>
-<% if listen_backlog.to_i > 0 -%>
+<% if listen_backlog.to_i != 511 -%>
 ListenBacklog       <%= listen_backlog %>
 <% end -%>
 MaxRequestsPerChild <%= max_requests_per_child %>
