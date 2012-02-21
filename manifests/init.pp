@@ -37,5 +37,7 @@ class apache(
     server_limit           => $server_limit,
     max_clients            => $max_clients,
     max_requests_per_child => $max_requests_per_child,
+    threads_per_child      => $threads_per_child,
+    listen_backlog         => $listen_backlog,
   }
 }
