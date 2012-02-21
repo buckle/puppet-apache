@@ -7,7 +7,14 @@ Common building blocks between apache::debian and apache::redhat.
 It shouldn't be necessary to directly include this class.
 
 */
-class apache::base {
+class apache::base(
+  $start_servers = 8,
+  $min_spare_servers = 5,
+  $max_spare_servers = 20,
+  $server_limit = 256,
+  $max_clients = 256,
+  $max_requests_per_child = 4000,
+  ) {
 
   include apache::params
   include bke_firewall::http_server
