@@ -1,4 +1,11 @@
-class apache::redhat inherits apache::base {
+class apache::redhat(
+  $start_servers,
+  $min_spare_servers,
+  $max_spare_servers,
+  $server_limit,
+  $max_clients,
+  $max_requests_per_child
+) inherits apache::base {
 
   include apache::params
 
