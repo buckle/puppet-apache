@@ -151,9 +151,18 @@ define apache::vhost-ssl (
   }
 
   # define variable names used in vhost-ssl.erb template
-  $certfile      = "${apache::params::root}/$name/ssl/$name.crt"
-  $certkeyfile   = "${apache::params::root}/$name/ssl/$name.key"
-  $csrfile       = "${apache::params::root}/$name/ssl/$name.csr"
+  case $operatingsystem {
+    /RedHat|CentOS/: {
+      $certfile      = "/etc/pki/tls/certs/${name}.crt"
+      $certkeyfile   = "/etc/pki/tls/private/${name}.key"
+      $csrfile       = "/etc/pki/tls/certs/${name}.csr"
+    }
+    /Debian|Ubuntu/: {
+      $certfile      = "${apache::params::root}/$name/ssl/$name.crt"
+      $certkeyfile   = "${apache::params::root}/$name/ssl/$name.key"
+      $csrfile       = "${apache::params::root}/$name/ssl/$name.csr"
+    }
+  }
 
   # By default, use CA certificate list shipped with the distribution.
   if $cacert != false {
