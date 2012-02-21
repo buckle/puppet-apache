@@ -17,7 +17,7 @@ define apache::module ($ensure='present') {
     apache::redhat::selinux {$name: }
   }
 
-  if $operatingsystem == "CentOS" or $operatingsystem == "RedHat" {
+  if $operatingsystem == "CentOS" or $operatingsystem == "RedHat" and $name != 'ssl' {
     file { "${apache::params::conf_dir}/mods-available/${name}.load":
       ensure => present,
       mode => 644,
