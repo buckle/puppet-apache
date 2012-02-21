@@ -110,13 +110,15 @@ KeepAliveTimeout 2
 # MaxRequestsPerChild: maximum number of requests a server process serves
 # TODO: Parameterize
 <IfModule prefork.c>
-StartServers        8
-MinSpareServers    25
-MaxSpareServers    50 
-ServerLimit      3072
-MaxClients       3072
-ListenBacklog    1024
-MaxRequestsPerChild  500000
+StartServers        <%= start_servers %>
+MinSpareServers     <%= min_spare_servers %>
+MaxSpareServers     <%= max_spare_servers %> 
+ServerLimit         <%= server_limit %>
+MaxClients          <%= max_clients %>
+<% if listen_backlog.to_i > 0 -%>
+ListenBacklog       <%= listen_backlog %>
+<% end -%>
+MaxRequestsPerChild <%= max_requests_per_child %> 
 </IfModule>
 
 # worker MPM
@@ -127,12 +129,16 @@ MaxRequestsPerChild  500000
 # ThreadsPerChild: constant number of worker threads in each server process
 # MaxRequestsPerChild: maximum number of requests a server process serves
 <IfModule worker.c>
-StartServers         2
-MaxClients         150
-MinSpareThreads     25
-MaxSpareThreads     75 
-ThreadsPerChild     25
-MaxRequestsPerChild  0
+StartServers        <%= start_servers %>
+MinSpareThreads     <%= min_spare_servers %>
+MaxSpareThreads     <%= max_spare_servers %> 
+ServerLimit         <%= server_limit %>
+MaxClients          <%= max_clients %>
+<% if listen_backlog.to_i > 0 -%>
+ListenBacklog       <%= listen_backlog %>
+<% end -%>
+MaxRequestsPerChild <%= max_requests_per_child %>
+ThreadsPerChild     <%= threads_per_child %>
 </IfModule>
 
 #
