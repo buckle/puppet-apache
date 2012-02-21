@@ -17,6 +17,18 @@ define apache::module ($ensure='present') {
     apache::redhat::selinux {$name: }
   }
 
+  if $operatingsystem == "CentOS" or $operatingsystem == "RedHat" {
+    file { "${apache::params::conf_dir}/mods-available/${name}.load":
+      ensure => present,
+      mode => 644,
+      owner => "root",
+      group => "root",
+      seltype => "httpd_config_t",
+      require => Package["apache"],
+      content => inline_template("LoadModule ${name}_module modules/mod_${name}.so\n"),
+    }
+  }
+
   case $ensure {
     'present', 'enabled' : {
       exec { "a2enmod ${name}":
