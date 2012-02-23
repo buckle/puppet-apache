@@ -4,8 +4,10 @@ class apache::ssl::redhat inherits apache::base::ssl {
     ensure => installed,
   }
 
+  # we make sure it's empty to prevent it from being reinstalled with RPM upgrades
   file {"/etc/httpd/conf.d/ssl.conf":
-    ensure => absent,
+    ensure => present,
+    content => "\n",
     require => Package["mod_ssl"],
     notify => Service["apache"],
     before => Exec["apache-graceful"],

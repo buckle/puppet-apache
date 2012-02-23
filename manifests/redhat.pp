@@ -68,10 +68,11 @@ class apache::redhat(
     onlyif => "get HTTPD != /usr/sbin/${httpd_mpm}",
   }
 
-  # Disable the welcome page
+  # Disable the welcome page, we make sure it's empty to prevent it from being reinstalled with RPM upgrades
   file { "${apache::params::conf_dir}/conf.d/welcome.conf":
-    ensure => absent,
-    notify  => Service["apache"],
+    ensure => present,
+    content => "\n",
+    notify  => Exec["apache-graceful"],
   }
 
   file { [
@@ -121,11 +122,12 @@ class apache::redhat(
 
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
+  # we make sure it's empty to prevent it from being reinstalled with RPM upgrades
   file { "${apache::params::conf_dir}/conf.d/proxy_ajp.conf":
-    ensure => absent,
+    ensure => present,
     require => Package["apache"],
-    notify => Exec["apache-graceful"],
+    content => "\n",
+    notify  => Exec["apache-graceful"],
   }
-
 }
 
