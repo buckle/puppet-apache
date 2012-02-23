@@ -122,7 +122,7 @@ define apache::vhost (
         },
         require => [File["${apache::params::root}/${name}"]],
       }
- 
+
       if $htdocs {
         File["${apache::params::root}/${name}/htdocs"] {
           source  => $htdocs,
@@ -167,14 +167,14 @@ define apache::vhost (
         }
         "": {
 
-          if $config_template {
+          if $config_template == false{
             File["${apache::params::conf_dir}/sites-available/${name}"] {
               content => template($config_template),
             }
           } else {
             # default vhost template
             File["${apache::params::conf_dir}/sites-available/${name}"] {
-              content => template("apache/vhost.erb"), 
+              content => template("apache/vhost.erb"),
             }
           }
         }
@@ -261,7 +261,7 @@ define apache::vhost (
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
-      
+
       file { "${apache::params::conf_dir}/sites-available/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
