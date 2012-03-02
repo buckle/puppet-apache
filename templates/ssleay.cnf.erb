@@ -34,5 +34,5 @@ emailAddress                    = <%= sslcert_email %>
 
 <% unless aliases.empty? -%>
 [ req_ext ]
-subjectAltName = "<%= aliases.collect! {|i| "DNS: #{i}" }.join(', ') -%>"
+subjectAltName = "<%= aliases.collect {|i| "DNS: #{i}" }.join(', ') -%>"
 <% end %>
