@@ -72,6 +72,7 @@ class apache::redhat(
   file { "${apache::params::conf_dir}/conf.d/welcome.conf":
     ensure => present,
     content => "\n",
+    require => Package["apache"],
     notify  => Exec["apache-graceful"],
   }
 
