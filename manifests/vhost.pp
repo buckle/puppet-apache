@@ -14,7 +14,6 @@ define apache::vhost (
   $aliases=[],
   $enable_default=true,
   $ports=['*:80'],
-  $default_vhost=false,
   $accesslog_format="combined"
 ) {
 

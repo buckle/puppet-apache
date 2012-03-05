@@ -120,7 +120,6 @@ define apache::vhost-ssl (
   $ports=['*:80'],
   $sslports=['*:443'],
   $redirect_to_ssl=false,
-  $default_vhost=false,
   $accesslog_format="combined"
 ) {
 
@@ -190,7 +189,6 @@ define apache::vhost-ssl (
     group          => $group,
     mode           => $mode,
     enable_default => $enable_default,
-    default_vhost  => $default_vhost,
     ports          => $ports,
     accesslog_format => $accesslog_format,
   }
