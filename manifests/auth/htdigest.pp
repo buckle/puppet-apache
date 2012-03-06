@@ -50,7 +50,7 @@ define apache::auth::htdigest (
         $password = $cryptPassword
       }
 
-      concat::fragment{ "${_userFile}_${username}_${realm}":
+      concat::fragment{ "${name} - ${_userFile}_${username}_${realm}":
         target  => $_authUserFile,
         content => "${username}:${realm}:${password}\n",
       }
