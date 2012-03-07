@@ -123,6 +123,7 @@ define apache::vhost-ssl (
   $accesslog_format="combined"
 ) {
 
+  include apache::ssl
   # these 2 values are required to generate a valid SSL certificate.
   if (!$sslcert_country) { $sslcert_country = "??" }
   if (!$sslcert_organisation) { $sslcert_organisation = "undefined organisation" }
