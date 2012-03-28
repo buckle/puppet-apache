@@ -21,6 +21,13 @@
   Include <%= wwwroot %>/<%= name%>/conf/*.conf
 <% end -%>
 
+  <Directory <%= documentroot %>>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all
+  </Directory>
+
 <% if cgipath -%>
   ScriptAlias /cgi-bin/ <%= cgipath %>
   <Directory <%= cgipath %>>

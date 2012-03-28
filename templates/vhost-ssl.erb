@@ -19,6 +19,13 @@
 
   Include <%= wwwroot %>/<%= name%>/conf/*.conf
 
+  <Directory <%= documentroot %>>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all
+  </Directory>
+
   SSLEngine On
   SSLCertificateFile <%= certfile %>
   SSLCertificateKeyFile <%= certkeyfile %>
