@@ -14,6 +14,7 @@ define apache::vhost (
   $aliases=[],
   $enable_default=true,
   $ports=['*:80'],
+  $recurse_source = '',
   $accesslog_format="combined"
 ) {
 
@@ -111,10 +112,18 @@ define apache::vhost (
       }
 
       file { "${apache::params::root}/${name}/htdocs":
-        ensure => directory,
-        owner  => $wwwuser,
-        group  => $group,
-        mode   => $mode,
+        ensure  => directory,
+        owner   => $wwwuser,
+        group   => $group,
+        mode    => $mode,
+        recurse => $recurse_source ? {
+          ''      => undef,
+          default => 'remote',
+        },
+        source  => $recurse_source ? {
+          ''      => undef,
+          default => $recurse_source,
+        },
         seltype => $operatingsystem ? {
           redhat => "httpd_sys_content_t",
           CentOS => "httpd_sys_content_t",
