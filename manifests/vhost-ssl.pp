@@ -120,6 +120,7 @@ define apache::vhost-ssl (
   $ports=['*:80'],
   $sslports=['*:443'],
   $redirect_to_ssl=false,
+  $recurse_source='',
   $accesslog_format="combined"
 ) {
 
@@ -191,6 +192,7 @@ define apache::vhost-ssl (
     mode           => $mode,
     enable_default => $enable_default,
     ports          => $ports,
+    recurse_source => $recurse_source,
     accesslog_format => $accesslog_format,
   }
 
