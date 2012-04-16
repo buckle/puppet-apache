@@ -92,6 +92,7 @@ Example usage:
   }
 
 */
+
 define apache::vhost-ssl (
   $ensure=present,
   $config_file="",
