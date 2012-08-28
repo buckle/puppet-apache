@@ -21,12 +21,13 @@
 
   <Directory <%= documentroot %>>
     Options Indexes FollowSymLinks MultiViews
-    AllowOverride None
+    AllowOverride <%=allow_override %>
     Order allow,deny
     allow from all
   </Directory>
 
   SSLEngine On
+  SSLCipherSuite ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
   SSLCertificateFile <%= certfile %>
   SSLCertificateKeyFile <%= certkeyfile %>
   SSLCACertificateFile <%= cacertfile %>

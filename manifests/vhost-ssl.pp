@@ -61,6 +61,7 @@ Parameters:
 - *sslports*: array specifying the ports on which the SSL vhost will be
   reachable. Defaults to "*:443".
 - *accesslog_format*: format string for access logs. Defaults to "combined".
+- *allow_override*: set the AllowOverride configuration. Defaults to "None".
 
 Requires:
 - Class["apache-ssl"]
@@ -122,7 +123,8 @@ define apache::vhost-ssl (
   $sslports=['*:443'],
   $redirect_to_ssl=false,
   $recurse_source='',
-  $accesslog_format="combined"
+  $accesslog_format="combined",
+  $allow_override = "None"
 ) {
 
   include apache::ssl
@@ -195,6 +197,7 @@ define apache::vhost-ssl (
     ports          => $ports,
     recurse_source => $recurse_source,
     accesslog_format => $accesslog_format,
+    allow_override	=> $allow_override,
   }
 
   if $ensure == "present" {
