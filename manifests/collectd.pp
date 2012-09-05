@@ -32,8 +32,8 @@ class apache::collectd {
 </Plugin>'
 
   collectd::plugin { "apache":
+    ensure  => 'present',
     content => $content,
-    require => Package["curl"],
   }
 
 }
