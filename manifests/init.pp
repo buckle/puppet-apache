@@ -34,6 +34,7 @@ class apache(
     RedHat,CentOS:  { $classname = 'apache::redhat' }
     default: { notice "Unsupported operatingsystem ${operatingsystem}" }
   }
+  include apache::collectd
   class{ $classname:
     start_servers          => $start_servers,
     min_spare_servers      => $min_spare_servers,

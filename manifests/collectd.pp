@@ -19,16 +19,20 @@ Usage:
 */
 class apache::collectd {
 
-  if ($operatingsystem == "RedHat" or $operatingsystem == "CentOS") and $lsbmajdistrelease > "4" {
-
+  if ($operatingsystem == "RedHat" or $operatingsystem == "CentOS") {
     package { "collectd-apache":
       ensure => present,
-      before => Collectd::Plugin["apache"],
+      notify => Service['collectd'],
     }
   }
 
+  $content = 'LoadPlugin apache
+<Plugin apache>
+       URL "http://localhost/server.status?auto"
+</Plugin>'
+
   collectd::plugin { "apache":
-    lines   => ['URL "http://localhost/server-status?auto"'],
+    content => $content,
     require => Package["curl"],
   }
 
