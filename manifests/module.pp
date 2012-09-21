@@ -4,7 +4,7 @@ define apache::module ($ensure='present',$template = undef) {
 
   $a2enmod_deps = $operatingsystem ? {
     /RedHat|CentOS/ => [
-      Package["httpd"],
+      Package["apache"],
       File["/etc/httpd/mods-available"],
       File["/etc/httpd/mods-enabled"],
       File["${apache::params::a2scripts_dir}/a2enmod"],
@@ -24,7 +24,7 @@ define apache::module ($ensure='present',$template = undef) {
       owner => "root",
       group => "root",
       seltype => "httpd_config_t",
-      require => Package["httpd"],
+      require => Package["apache"],
       content => $template ? {
         undef => inline_template("LoadModule ${name}_module modules/mod_${name}.so\n"),
         default => template("$template"),
