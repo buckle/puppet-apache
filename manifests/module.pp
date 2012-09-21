@@ -27,7 +27,6 @@ define apache::module ($ensure='present',$template = undef) {
       require => Package["apache"],
       content => $template ? {
         undef => inline_template("LoadModule ${name}_module modules/mod_${name}.so\n"),
-        'lib' => inline_template("LoadModule ${name}_module modules/lib${name}.so\n"), 
         default => template("$template"),
       },
     }
