@@ -15,7 +15,8 @@ define apache::vhost (
   $enable_default=true,
   $ports=['*:80'],
   $recurse_source = '',
-  $accesslog_format="combined"
+  $accesslog_format="combined",
+  $allowOverride = "None"
 ) {
 
   include apache::params
