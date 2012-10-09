@@ -21,7 +21,7 @@
 
   <Directory <%= documentroot %>>
     Options Indexes FollowSymLinks MultiViews
-    AllowOverride None
+    AllowOverride <%=allow_override %>
     Order allow,deny
     allow from all
   </Directory>
