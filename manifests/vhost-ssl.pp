@@ -197,6 +197,7 @@ define apache::vhost-ssl (
     ports          => $ports,
     recurse_source => $recurse_source,
     accesslog_format => $accesslog_format,
+    allow_override	=> $allow_override,
   }
 
   if $ensure == "present" {
