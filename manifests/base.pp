@@ -136,5 +136,4 @@ class apache::base {
       order => 25
     }
   }
-
 }
