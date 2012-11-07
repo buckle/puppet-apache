@@ -128,7 +128,7 @@ class apache::base {
     source => "puppet:///modules/${module_name}/usr/local/bin/htgroup",
   }
 
-  # rkhunter PORT_WHITELIST - requires pci module
+  # rkhunter PORT_WHITELIST - requires pci module with rkhunter class
   if tagged('pci::rkhunter') {
     pci::rkhunter_conf_local { 'PORT_WHITELIST service httpd':
       key   => 'PORT_WHITELIST',
