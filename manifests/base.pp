@@ -132,7 +132,7 @@ class apache::base {
   if tagged('pci::rkhunter') {
     pci::rkhunter_conf_local { 'PORT_WHITELIST service httpd':
       key   => 'PORT_WHITELIST',
-      value => '"/usr/sbin/httpd"',
+      value => '/usr/sbin/httpd',
       order => 25
     }
   }
