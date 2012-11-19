@@ -14,113 +14,113 @@ class apache::base {
   $access_log = $apache::params::access_log
   $error_log = $apache::params::error_log
 
-  file { "root directory":
+  file { 'root directory':
     path    => $apache::params::root,
     ensure  => directory,
-    mode    => 755,
-    owner   => "root",
-    group   => "root",
-    require => Package["apache"],
+    mode    => '755',
+    owner   => 'root',
+    group   => 'root',
+    require => Package['apache'],
   }
 
   concat { "${apache::params::conf_dir}/ports.conf":
   }
 
-  file { "log directory":
+  file { 'log directory':
     path    => $apache::params::log_dir,
     ensure  => directory,
-    mode    => 700,
-    owner   => "root",
-    group   => "root",
-    require => Package["apache"],
+    mode    => '700',
+    owner   => 'root',
+    group   => 'root',
+    require => Package['apache'],
   }
 
-  user { "apache user":
+  user { 'apache user':
     name    => $apache::params::http_user,
     ensure  => present,
-    require => Package["apache"],
-    shell   => "/sbin/nologin",
+    require => Package['apache'],
+    shell   => '/sbin/nologin',
   }
 
-  group { "apache group":
+  group { 'apache group':
     name    => $apache::params::http_user,
     ensure  => present,
-    require => Package["apache"],
+    require => Package['apache'],
   }
 
-  package { "apache":
+  package { 'apache':
     name   => $apache::params::package_name,
     ensure => installed,
   }
 
-  service { "apache":
+  service { 'apache':
     name       => $apache::params::package_name,
     ensure     => running,
     enable     => true,
     hasrestart => true,
-    require    => Package["apache"],
+    require    => Package['apache'],
   }
 
-  file { "logrotate configuration":
+  file { 'logrotate configuration':
     path    => undef,
     ensure  => present,
     owner   => root,
     group   => root,
     mode    => 644,
     source  => undef,
-    require => Package["apache"],
+    require => Package['apache'],
   }
 
-  apache::listen { "80":
+  apache::listen { '80':
     ensure => present
   }
 
-  apache::namevhost { "*:80":
+  apache::namevhost { '*:80':
     ensure => present
   }
 
   apache::module { [
-    "alias",
-    "auth_basic",
-    "authn_file",
-    "authz_groupfile",
-    "authz_host",
-    "authz_user",
-    "dir",
-    "env",
-    "mime",
-    "rewrite",
-    "setenvif",
-    "status",]:
+    'alias',
+    'auth_basic',
+    'authn_file',
+    'authz_groupfile',
+    'authz_host',
+    'authz_user',
+    'dir',
+    'env',
+    'mime',
+    'rewrite',
+    'setenvif',
+    'status',]:
     ensure => present,
   }
 
-  file { "default status module configuration":
+  file { 'default status module configuration':
     path    => undef,
     ensure  => present,
     owner   => root,
     group   => root,
     source  => undef,
-    require => Module["status"],
-    notify  => Exec["apache-graceful"],
+    require => Module['status'],
+    notify  => Exec['apache-graceful'],
   }
 
-  file { "default virtualhost":
+  file { 'default virtualhost':
     path    => "${apache::params::conf_dir}/sites-available/default",
     ensure  => present,
-    content => template("apache/default-vhost.erb"),
-    require => Package["apache"],
-    notify  => Exec["apache-graceful"],
+    content => template('apache/default-vhost.erb'),
+    require => Package['apache'],
+    notify  => Exec['apache-graceful'],
     mode    => 644,
   }
 
-  exec { "apache-graceful":
+  exec { 'apache-graceful':
     command     => undef,
     refreshonly => true,
     onlyif      => undef,
   }
 
-  file { "/usr/local/bin/htgroup":
+  file { '/usr/local/bin/htgroup':
     ensure => present,
     owner  => root,
     group  => root,

@@ -19,8 +19,8 @@ Usage:
 */
 class apache::collectd {
 
-  if ($operatingsystem == "RedHat" or $operatingsystem == "CentOS") {
-    package { "collectd-apache":
+  if ($::operatingsystem == 'RedHat' or $::operatingsystem == 'CentOS') {
+    package { 'collectd-apache':
       ensure => present,
       notify => Service['collectd'],
     }
@@ -31,7 +31,7 @@ class apache::collectd {
        URL "http://localhost/server.status?auto"
 </Plugin>'
 
-  collectd::plugin { "apache":
+  collectd::plugin { 'apache':
     ensure  => 'present',
     content => $content,
   }

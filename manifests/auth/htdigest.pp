@@ -1,23 +1,24 @@
 define apache::auth::htdigest (
-  $ensure="present",
+  $username,
+  $ensure='present',
   $vhost=false,
   $userFileLocation=false,
-  $userFileName=".htdigest_pw",
-  $username,
+  $userFileName='.htdigest_pw',
   $realm=false,
   $cryptPassword=false,
-  $clearPassword=false){
+  $clearPassword=false
+){
 
   include apache::params
   include concat::setup
 
   if $userFileLocation {
-    $_userFileLocation = $userFileLocation
+    $local_userFileLocation = $userFileLocation
   } else {
     if $vhost {
-      $_userFileLocation = "${apache::params::root}/${vhost}/private"
+      $local_userFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
-      fail "parameter vhost is required!"
+      fail 'parameter vhost is required!'
     }
   }
 
@@ -26,21 +27,21 @@ define apache::auth::htdigest (
       $realm = $vhost
     }
     else {
-      $realm = "Private Area"
+      $realm = 'Private Area'
     }
   }
 
-  $_authUserFile = "${_userFileLocation}/${userFileName}"
+  $_authUserFile = "${$local_userFileLocation}/${userFileName}"
 
   case $ensure {
 
     'present': {
       if $cryptPassword and $clearPassword {
-        fail "choose only one of cryptPassword OR clearPassword !"
+        fail 'choose only one of cryptPassword OR clearPassword !'
       }
 
       if !$cryptPassword and !$clearPassword  {
-        fail "choose one of cryptPassword OR clearPassword !"
+        fail 'choose one of cryptPassword OR clearPassword !'
       }
 
       if $clearPassword {
@@ -50,7 +51,7 @@ define apache::auth::htdigest (
         $password = $cryptPassword
       }
 
-      concat::fragment{ "${name} - ${_userFile}_${username}_${realm}":
+      concat::fragment{ "${name} - ${userFileName}_${username}_${realm}":
         target  => $_authUserFile,
         content => "${username}:${realm}:${password}\n",
       }

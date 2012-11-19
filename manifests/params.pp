@@ -1,6 +1,6 @@
 class apache::params {
 
-  case $operatingsystem {
+  case $::operatingsystem {
     'redhat', 'centos': {
       $package_name = 'httpd'
       $http_user = 'apache'

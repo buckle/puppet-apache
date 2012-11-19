@@ -29,10 +29,10 @@ class apache(
   ) {
 
   include apache::params, bke_firewall::http_server
-  case $operatingsystem {
+  case $::operatingsystem {
     Debian,Ubuntu:  { $classname = 'apache::debian' }
     RedHat,CentOS:  { $classname = 'apache::redhat' }
-    default: { notice "Unsupported operatingsystem ${operatingsystem}" }
+    default: { notice "Unsupported operatingsystem ${::operatingsystem}" }
   }
   include apache::collectd
   class{ $classname:

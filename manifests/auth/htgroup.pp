@@ -1,5 +1,5 @@
 define apache::auth::htgroup (
-  $ensure="present", 
+  $ensure="present",
   $vhost=false,
   $groupFileLocation=false,
   $groupFileName="htgroup",
@@ -9,37 +9,37 @@ define apache::auth::htgroup (
   include apache::params
 
   if $groupFileLocation {
-    $_groupFileLocation = $groupFileLocation
+    $local_userFileLocation = $groupFileLocation
   } else {
     if $vhost {
-      $_groupFileLocation = "${apache::params::root}/${vhost}/private"
+      $local_userFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
       fail "parameter vhost is require !"
-    }  
+    }
   }
 
-  $_authGroupFile = "${_groupFileLocation}/${groupFileName}"
-  
+  $local_authGroupFile = "${$local_userFileLocation}/${groupFileName}"
+
   case $ensure {
 
     'present': {
-      exec {"! test -f $_authGroupFile && OPT='-c'; htgroup \$OPT $_authGroupFile $groupname $members":
-        unless => "grep -qi '^${groupname}: ${members}$' ${_authGroupFile}",
-        require => File[$_groupFileLocation],
+      exec {"! test -f $local_authGroupFile && OPT='-c'; htgroup \$OPT $local_authGroupFile $groupname $members":
+        unless => "grep -qi '^${groupname}: ${members}$' ${local_authGroupFile}",
+        require => File[$local_authGroupFile],
       }
     }
 
     'absent': {
-      exec {"htgroup -D $_authGroupFile $groupname":
-        onlyif => "grep -q $groupname $_authGroupFile",
-        notify => Exec["delete $_authGroupFile after remove $groupname"],
+      exec {"htgroup -D $local_authGroupFile $groupname":
+        onlyif => "grep -q $groupname $local_authGroupFile",
+        notify => Exec["delete $local_authGroupFile after remove $groupname"],
       }
 
-      exec {"delete $_authGroupFile after remove $groupname":
-        command => "rm -f $_authGroupFile",
-        onlyif => "wc -l $_authGroupFile |grep -q 0",
+      exec {"delete $local_authGroupFile after remove $groupname":
+        command => "rm -f $local_authGroupFile",
+        onlyif => "wc -l $local_authGroupFile |grep -q 0",
         refreshonly => true,
-      } 
+      }
     }
   }
 }

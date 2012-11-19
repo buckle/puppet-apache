@@ -1,7 +1,12 @@
-define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode=2755) {
+define apache::webdav::instance (
+  $vhost,
+  $ensure=present,
+  $directory=false,
+  $mode=2755
+) {
 
   include apache::params
- 
+
   if $directory {
     $davdir = "${directory}/webdav-${name}"
   } else {
@@ -12,23 +17,24 @@ define apache::webdav::instance ($ensure=present, $vhost, $directory=false,$mode
     ensure => $ensure ? {
       present => directory,
       absent  => absent,
+      default => undef
     },
-    owner => "www-data",
-    group => "www-data",
+    owner => 'www-data',
+    group => 'www-data',
     mode => $mode,
   }
 
   # configuration
   file { "${apache::params::root}/${vhost}/conf/webdav-${name}.conf":
     ensure => $ensure,
-    content => template("apache/webdav-config.erb"),
-    seltype => $operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
+    content => template('apache/webdav-config.erb'),
+    seltype => $::operatingsystem ? {
+      'RedHat' => 'httpd_config_t',
+      'CentOS' => 'httpd_config_t',
       default  => undef,
     },
     require => File[$davdir],
-    notify => Exec["apache-graceful"],
+    notify => Exec['apache-graceful'],
   }
 
 }
