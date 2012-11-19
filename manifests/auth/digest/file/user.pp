@@ -19,32 +19,32 @@ define apache::auth::digest::file::user (
     apache::module {'auth_digest': }
   }
 
-  if $authUserFile {
-    $_authUserFile = $authUserFile
+  if ($authUserFile) {
+    $local_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "${apache::params::root}/${vhost}/private/.htdigest_pw"
+    $local_authUserFile = "${apache::params::root}/${vhost}/private/.htdigest_pw"
   }
-  concat { $_authUserFile:
+  concat { $local_authUserFile:
     owner => root,
     group => root,
     mode  => '644',
   }
 
   if $users != 'valid-user' {
-    $_users = "user $users"
+    $local_users = "user ${users}"
   } else {
-    $_users = $users
+    $local_users = $users
   }
 
   file {"${apache::params::root}/${vhost}/conf/auth-digest-file-user-${fname}.conf":
-    ensure => $ensure,
-    content => template('apache/auth-digest-file-user.erb'),
-    seltype => $::operatingsystem ? {
-      'RedHat' => 'httpd_config_t',
-      'CentOS' => 'httpd_config_t',
-      default  => undef,
+    ensure      => $ensure,
+    content     => template('apache/auth-digest-file-user.erb'),
+    seltype     => $::operatingsystem ? {
+      'RedHat'  => 'httpd_config_t',
+      'CentOS'  => 'httpd_config_t',
+      default   => undef,
     },
-    notify => Exec['apache-graceful'],
+    notify      => Exec['apache-graceful'],
   }
 
 }

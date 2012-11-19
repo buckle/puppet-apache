@@ -3,8 +3,8 @@
   AuthName "Private Area"
   AuthType Basic
   AuthBasicProvider file
-  AuthUserFile <%= _authUserFile %>
-  require <%= _users %>
+  AuthUserFile <%= local_authUserFile %>
+  require <%= local_users %>
 <% if ro_users -%>
   <Limit <%= limits %>>
     require user <%= ro_users %>

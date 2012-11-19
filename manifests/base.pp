@@ -15,9 +15,9 @@ class apache::base {
   $error_log = $apache::params::error_log
 
   file { 'root directory':
+    ensure  => 'directory',
     path    => $apache::params::root,
-    ensure  => directory,
-    mode    => '755',
+    mode    => '0755',
     owner   => 'root',
     group   => 'root',
     require => Package['apache'],
@@ -27,56 +27,56 @@ class apache::base {
   }
 
   file { 'log directory':
+    ensure  => 'directory',
     path    => $apache::params::log_dir,
-    ensure  => directory,
-    mode    => '700',
+    mode    => '0700',
     owner   => 'root',
     group   => 'root',
     require => Package['apache'],
   }
 
   user { 'apache user':
+    ensure  => 'present',
     name    => $apache::params::http_user,
-    ensure  => present,
     require => Package['apache'],
     shell   => '/sbin/nologin',
   }
 
   group { 'apache group':
+    ensure  => 'present',
     name    => $apache::params::http_user,
-    ensure  => present,
     require => Package['apache'],
   }
 
   package { 'apache':
+    ensure => 'present',
     name   => $apache::params::package_name,
-    ensure => installed,
   }
 
   service { 'apache':
+    ensure     => 'running',
     name       => $apache::params::package_name,
-    ensure     => running,
     enable     => true,
     hasrestart => true,
     require    => Package['apache'],
   }
 
   file { 'logrotate configuration':
+    ensure  => 'present',
     path    => undef,
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
     source  => undef,
     require => Package['apache'],
   }
 
   apache::listen { '80':
-    ensure => present
+    ensure  => 'present',
   }
 
   apache::namevhost { '*:80':
-    ensure => present
+    ensure  => 'present',
   }
 
   apache::module { [
@@ -96,22 +96,22 @@ class apache::base {
   }
 
   file { 'default status module configuration':
+    ensure  => 'present',
     path    => undef,
-    ensure  => present,
-    owner   => root,
-    group   => root,
+    owner   => 'root',
+    group   => 'root',
     source  => undef,
     require => Module['status'],
     notify  => Exec['apache-graceful'],
   }
 
   file { 'default virtualhost':
+    ensure  => 'present',
     path    => "${apache::params::conf_dir}/sites-available/default",
-    ensure  => present,
     content => template('apache/default-vhost.erb'),
     require => Package['apache'],
     notify  => Exec['apache-graceful'],
-    mode    => 644,
+    mode    => '0644',
   }
 
   exec { 'apache-graceful':
@@ -121,10 +121,10 @@ class apache::base {
   }
 
   file { '/usr/local/bin/htgroup':
-    ensure => present,
-    owner  => root,
-    group  => root,
-    mode   => 755,
+    ensure => 'present',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
     source => "puppet:///modules/${module_name}/usr/local/bin/htgroup",
   }
 

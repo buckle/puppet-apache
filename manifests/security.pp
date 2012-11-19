@@ -4,8 +4,8 @@ class apache::security {
 
     RedHat,CentOS: {
       package { 'mod_security':
-        ensure => present,
-        alias => 'apache-mod_security',
+        ensure  => present,
+        alias   => 'apache-mod_security',
       }
 
       file { '/etc/httpd/conf.d/mod_security.conf':
@@ -23,14 +23,16 @@ class apache::security {
 
     Debian: {
       package { 'libapache-mod-security':
-        ensure => present,
-        alias => 'apache-mod_security',
+        ensure  => present,
+        alias   => 'apache-mod_security',
       }
     }
+
+    default: {}
   }
 
   apache::module { ['unique_id', 'security']:
-    ensure => present,
+    ensure  => present,
     require => Package['apache-mod_security'],
   }
 

@@ -157,13 +157,13 @@ define apache::vhost_ssl (
   }
 
   # define variable names used in vhost-ssl.erb template
-  $certfile      = "${apache::params::root}/$name/ssl/$name.crt"
-  $certkeyfile   = "${apache::params::root}/$name/ssl/$name.key"
-  $csrfile       = "${apache::params::root}/$name/ssl/$name.csr"
+  $certfile      = "${apache::params::root}/${name}/ssl/${name}.crt"
+  $certkeyfile   = "${apache::params::root}/${name}/ssl/${name}.key"
+  $csrfile       = "${apache::params::root}/${name}/ssl/${name}.csr"
 
   # By default, use CA certificate list shipped with the distribution.
   if $cacert != false {
-    $cacertfile = "${apache::params::root}/$name/ssl/cacert.crt"
+    $cacertfile = "${apache::params::root}/${name}/ssl/cacert.crt"
   } else {
     $cacertfile = $::operatingsystem ? {
       /RedHat|CentOS/ => '/etc/pki/tls/certs/ca-bundle.crt',
@@ -173,16 +173,16 @@ define apache::vhost_ssl (
   }
 
   if $certchain != false {
-    $certchainfile = "${apache::params::root}/$name/ssl/certchain.crt"
+    $certchainfile = "${apache::params::root}/${name}/ssl/certchain.crt"
   }
 
 
   # call parent definition to actually do the virtualhost setup.
-  apache::vhost {$name:
+  apache::vhost { $name:
     ensure          => $ensure,
     config_file     => $config_file,
     config_template => $config_template ? {
-      false => 'apache/vhost-ssl.erb',
+      false         => 'apache/vhost-ssl.erb',
       default       => $config_template,
     },
     aliases         => $aliases,
@@ -198,15 +198,15 @@ define apache::vhost_ssl (
     ports           => $ports,
     recurse_source  => $recurse_source,
     accesslog_format=> $accesslog_format,
-    allow_override	=> $allow_override,
+    allow_override  => $allow_override,
   }
 
   if $ensure == 'present' {
     file { "${apache::params::root}/${name}/ssl":
-      ensure => directory,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '700',
+      ensure  => directory,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0700',
       seltype => 'cert_t',
       require => [File["${apache::params::root}/${name}"]],
     }
@@ -214,9 +214,9 @@ define apache::vhost_ssl (
     if $cert != false {
       # The virtualhost's certificate.
       file { $certfile:
-        owner => 'root',
-        group => 'root',
-        mode  => '640',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0640',
         source  => $cert,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
@@ -227,9 +227,9 @@ define apache::vhost_ssl (
     if $certkey != false {
       # The virtualhost's private key.
       file { $certkeyfile:
-        owner => 'root',
-        group => 'root',
-        mode  => '600',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0600',
         source  => $certkey,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
@@ -243,7 +243,7 @@ define apache::vhost_ssl (
       file { $cacertfile:
         owner   => 'root',
         group   => 'root',
-        mode    => '640',
+        mode    => '0640',
         source  => $cacert,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
@@ -257,9 +257,9 @@ define apache::vhost_ssl (
       # The certificate chain file from your certification authority's. They
       # should inform you if you need one.
       file { $certchainfile:
-        owner => 'root',
-        group => 'root',
-        mode  => '640',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0640',
         source  => $certchain,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],

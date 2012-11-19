@@ -17,6 +17,7 @@ class apache::params {
       $root = '/var/www'
       $a2scripts_dir = '/usr/sbin'
     }
+    default: {}
   }
 
   $access_log = "${log_dir}/access_log"

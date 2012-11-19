@@ -14,27 +14,27 @@ define apache::webdav::instance (
   }
 
   file {$davdir:
-    ensure => $ensure ? {
+    ensure    => $ensure ? {
       present => directory,
       absent  => absent,
       default => undef
     },
-    owner => 'www-data',
-    group => 'www-data',
-    mode => $mode,
+    owner     => 'www-data',
+    group     => 'www-data',
+    mode      => $mode,
   }
 
   # configuration
   file { "${apache::params::root}/${vhost}/conf/webdav-${name}.conf":
-    ensure => $ensure,
-    content => template('apache/webdav-config.erb'),
-    seltype => $::operatingsystem ? {
-      'RedHat' => 'httpd_config_t',
-      'CentOS' => 'httpd_config_t',
-      default  => undef,
+    ensure    => $ensure,
+    content   => template('apache/webdav-config.erb'),
+    seltype   => $::operatingsystem ? {
+      'RedHat'=> 'httpd_config_t',
+      'CentOS'=> 'httpd_config_t',
+      default => undef,
     },
-    require => File[$davdir],
-    notify => Exec['apache-graceful'],
+    require   => File[$davdir],
+    notify    => Exec['apache-graceful'],
   }
 
 }

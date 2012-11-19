@@ -1,10 +1,10 @@
 define apache::auth::htgroup (
-  $ensure="present",
+  $groupname,
+  $members,
+  $ensure='present',
   $vhost=false,
   $groupFileLocation=false,
-  $groupFileName="htgroup",
-  $groupname,
-  $members){
+  $groupFileName='htgroup'){
 
   include apache::params
 
@@ -14,32 +14,30 @@ define apache::auth::htgroup (
     if $vhost {
       $local_userFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
-      fail "parameter vhost is require !"
+      fail 'parameter vhost is require !'
     }
   }
 
   $local_authGroupFile = "${$local_userFileLocation}/${groupFileName}"
 
   case $ensure {
-
     'present': {
-      exec {"! test -f $local_authGroupFile && OPT='-c'; htgroup \$OPT $local_authGroupFile $groupname $members":
-        unless => "grep -qi '^${groupname}: ${members}$' ${local_authGroupFile}",
+      exec {"! test -f ${local_authGroupFile} && OPT='-c'; htgroup \$OPT ${local_authGroupFile} ${groupname} ${members}":
+        unless  => "grep -qi '^${groupname}: ${members}$' ${local_authGroupFile}",
         require => File[$local_authGroupFile],
       }
     }
-
     'absent': {
-      exec {"htgroup -D $local_authGroupFile $groupname":
-        onlyif => "grep -q $groupname $local_authGroupFile",
-        notify => Exec["delete $local_authGroupFile after remove $groupname"],
+      exec {"htgroup -D ${local_authGroupFile} ${groupname}":
+        onlyif => "grep -q ${groupname} ${local_authGroupFile}",
+        notify => Exec["delete ${local_authGroupFile} after remove ${groupname}"],
       }
-
-      exec {"delete $local_authGroupFile after remove $groupname":
-        command => "rm -f $local_authGroupFile",
-        onlyif => "wc -l $local_authGroupFile |grep -q 0",
+      exec {"delete ${local_authGroupFile} after remove ${groupname}":
+        command     => "rm -f ${local_authGroupFile}",
+        onlyif      => "wc -l ${local_authGroupFile} | grep -q 0",
         refreshonly => true,
       }
     }
+    default: {}
   }
 }

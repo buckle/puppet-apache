@@ -15,27 +15,27 @@ define apache::auth::basic::file::user (
     apache::module {'authn_file': }
   }
 
-  if $authUserFile {
-    $_authUserFile = $authUserFile
+  if ($authUserFile) {
+    $local_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
+    $local_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
   }
 
-  if $users != 'valid-user' {
-    $_users = "user $users"
+  if ($users != 'valid-user') {
+    $local_users = "user ${users}"
   } else {
-    $_users = $users
+    $local_users = $users
   }
 
   file {"${apache::params::root}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
-    ensure => $ensure,
-    content => template('apache/auth-basic-file-user.erb'),
-    seltype => $::operatingsystem ? {
-      'RedHat' => 'httpd_config_t',
-      'CentOS' => 'httpd_config_t',
-      default  => undef,
+    ensure      => $ensure,
+    content     => template('apache/auth-basic-file-user.erb'),
+    seltype     => $::operatingsystem ? {
+      'RedHat'  => 'httpd_config_t',
+      'CentOS'  => 'httpd_config_t',
+      default   => undef,
     },
-    notify => Exec['apache-graceful'],
+    notify      => Exec['apache-graceful'],
   }
 
 }

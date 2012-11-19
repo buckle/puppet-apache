@@ -38,7 +38,7 @@ class apache::debian(
     default => "apache2-mpm-${apache_mpm_type}",
   }
 
-  package { "${mpm_package}":
+  package { $mpm_package:
     ensure  => installed,
     require => Package['apache'],
   }
@@ -58,10 +58,10 @@ class apache::debian(
   }
 
   file { "${apache::params::root}/html/index.html":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
     content => '<html><body><h1>It works!</h1></body></html>\n',
   }
 
@@ -72,8 +72,8 @@ class apache::debian(
   }
 
   file { "${apache::params::conf_dir}/sites-available/default-ssl":
-    ensure => absent,
-    force => true,
+    ensure  => absent,
+    force   => true,
   }
 
 }

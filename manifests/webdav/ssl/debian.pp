@@ -7,9 +7,10 @@ class apache::webdav::ssl::debian inherits apache::webdav::base {
         ensure  => directory,
         owner   => www-data,
         group   => root,
-        mode    => '755',
+        mode    => '0755',
       }
     }
+    default: {}
   }
 
 }

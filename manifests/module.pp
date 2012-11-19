@@ -24,14 +24,14 @@ define apache::module (
 
   if $::operatingsystem == 'CentOS' or $::operatingsystem == 'RedHat' {
     file { "${apache::params::conf_dir}/mods-available/${name}.load":
-      ensure => present,
-      mode => 644,
-      owner => 'root',
-      group => 'root',
-      seltype => 'httpd_config_t',
-      require => Package['apache'],
-      content => $template ? {
-        undef => inline_template("LoadModule ${name}_module modules/mod_${name}.so\n"),
+      ensure    => 'present',
+      mode      => '0644',
+      owner     => 'root',
+      group     => 'root',
+      seltype   => 'httpd_config_t',
+      require   => Package['apache'],
+      content   => $template ? {
+        undef   => inline_template("LoadModule ${name}_module modules/mod_${name}.so\n"),
         default => template($template),
       },
     }
@@ -55,7 +55,7 @@ define apache::module (
           || [ -e ${apache::params::conf_dir}/mods-enabled/${name}.load ]'",
         require => $a2enmod_deps,
         notify  => Exec['apache-graceful'],
-       }
+      }
     }
 
     default: {

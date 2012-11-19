@@ -31,30 +31,24 @@ define apache::auth::htdigest (
     }
   }
 
-  $_authUserFile = "${$local_userFileLocation}/${userFileName}"
+  $local_authUserFile = "${$local_userFileLocation}/${userFileName}"
 
-  case $ensure {
-
-    'present': {
-      if $cryptPassword and $clearPassword {
-        fail 'choose only one of cryptPassword OR clearPassword !'
-      }
-
-      if !$cryptPassword and !$clearPassword  {
-        fail 'choose one of cryptPassword OR clearPassword !'
-      }
-
-      if $clearPassword {
-        $password = md5("${username}:${realm}:${clearPassword}")
-      }
-      else {
-        $password = $cryptPassword
-      }
-
-      concat::fragment{ "${name} - ${userFileName}_${username}_${realm}":
-        target  => $_authUserFile,
-        content => "${username}:${realm}:${password}\n",
-      }
+  if ($ensure == 'present') {
+    if $cryptPassword and $clearPassword {
+      fail 'choose only one of cryptPassword OR clearPassword !'
+    }
+    if !$cryptPassword and !$clearPassword  {
+      fail 'choose one of cryptPassword OR clearPassword !'
+    }
+    if $clearPassword {
+      $password = md5("${username}:${realm}:${clearPassword}")
+    }
+    else {
+      $password = $cryptPassword
+    }
+    concat::fragment{ "${name} - ${userFileName}_${username}_${realm}":
+      target  => $local_authUserFile,
+      content => "${username}:${realm}:${password}\n",
     }
   }
 }

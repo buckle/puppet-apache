@@ -38,7 +38,7 @@ class apache::awstats {
       # awstats RPM installs its own cron in /etc/cron.hourly/awstats
       file { '/usr/share/awstats/wwwroot/cgi-bin/':
         seltype => 'httpd_sys_script_exec_t',
-        mode    => 0755,
+        mode    => '0755',
         recurse => true,
         require => Package['awstats'],
       }

@@ -54,14 +54,14 @@ define apache::directive (
   }
 
   file { $local_filename:
-    ensure => $ensure,
-    content => "# file managed by puppet\n${directive}\n",
-    seltype => $::operatingsystem ? {
-      'RedHat' => "httpd_config_t",
-      'CentOS' => 'httpd_config_t',
-      default  => undef,
+    ensure    => $ensure,
+    content   => "# file managed by puppet\n${directive}\n",
+    seltype   => $::operatingsystem ? {
+      'RedHat'=> 'httpd_config_t',
+      'CentOS'=> 'httpd_config_t',
+      default => undef,
     },
-    notify  => Service['apache'],
-    require => Apache::Vhost[$vhost],
+    notify    => Service['apache'],
+    require   => Apache::Vhost[$vhost],
   }
 }

@@ -58,18 +58,18 @@ define apache::proxypass (
   $local_filename = $filename ? {
     ''      => "${apache::params::root}/${vhost}/conf/proxypass-${fname}.conf",
     default => "${apache::params::root}/${vhost}/conf/${filename}",
-   }
+  }
 
   file { $local_filename:
-    ensure => $ensure,
-    content => template('apache/proxypass.erb'),
-    seltype => $::operatingsystem ? {
-      'RedHat' => 'httpd_config_t',
-      'CentOS' => 'httpd_config_t',
-      default  => undef,
+    ensure      => $ensure,
+    content     => template('apache/proxypass.erb'),
+    seltype     => $::operatingsystem ? {
+      'RedHat'  => 'httpd_config_t',
+      'CentOS'  => 'httpd_config_t',
+      default   => undef,
     },
 
-    notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$vhost],
+    notify      => Exec['apache-graceful'],
+    require     => Apache::Vhost[$vhost],
   }
 }

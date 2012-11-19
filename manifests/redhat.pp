@@ -32,8 +32,8 @@ class apache::redhat(
   }
 
   File['default status module configuration'] {
-    path => "${apache::params::conf_dir}/conf.d/status.conf",
-    source => "puppet:///modules/apache/etc/httpd/conf/status.conf",
+    path    => "${apache::params::conf_dir}/conf.d/status.conf",
+    source  => 'puppet:///modules/apache/etc/httpd/conf/status.conf',
   }
 
   File['logrotate configuration'] {
@@ -52,11 +52,11 @@ class apache::redhat(
       "${apache::params::a2scripts_dir}/a2enmod",
       "${apache::params::a2scripts_dir}/a2dismod"
     ]:
-    ensure => present,
-    mode => '755',
-    owner => 'root',
-    group => 'root',
-    source => "puppet:///modules/${module_name}/usr/local/sbin/a2X.redhat",
+    ensure  => present,
+    mode    => '0755',
+    owner   => 'root',
+    group   => 'root',
+    source  => "puppet:///modules/${module_name}/usr/local/sbin/a2X.redhat",
   }
 
   $httpd_mpm = $apache_mpm_type ? {
@@ -72,16 +72,16 @@ class apache::redhat(
   }
 
   augeas { "select httpd mpm ${httpd_mpm}":
-    lens => 'Sysconfig.lns',
-    incl => '/etc/sysconfig/httpd',
+    lens    => 'Sysconfig.lns',
+    incl    => '/etc/sysconfig/httpd',
     context => '/files/etc/sysconfig/httpd',
     changes => [ "set HTTPD /usr/sbin/${httpd_mpm}", ],
-    onlyif => "get HTTPD != /usr/sbin/${httpd_mpm}",
+    onlyif  => "get HTTPD != /usr/sbin/${httpd_mpm}",
   }
 
   # Disable the welcome page, we make sure it's empty to prevent it from being reinstalled with RPM upgrades
   file { "${apache::params::conf_dir}/conf.d/welcome.conf":
-    ensure => present,
+    ensure  => present,
     content => '\n',
     require => Package['apache'],
     notify  => Exec['apache-graceful'],
@@ -92,16 +92,16 @@ class apache::redhat(
       "${apache::params::conf_dir}/sites-enabled",
       "${apache::params::conf_dir}/mods-enabled"
     ]:
-    ensure => directory,
-    mode => '644',
-    owner => 'root',
-    group => 'root',
+    ensure  => directory,
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
     seltype => 'httpd_config_t',
     require => Package['apache'],
   }
 
   file { "${apache::params::conf_dir}/conf/httpd.conf":
-    ensure => present,
+    ensure  => present,
     content => template('apache/httpd.conf.erb'),
     seltype => 'httpd_config_t',
     notify  => Service['apache'],
@@ -112,10 +112,10 @@ class apache::redhat(
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   file { "${apache::params::conf_dir}/mods-available":
-    ensure => directory,
-    mode => '644',
-    owner => 'root',
-    group => 'root',
+    ensure  => directory,
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
     seltype => 'httpd_config_t',
     require => Package['apache'],
   }
@@ -136,7 +136,7 @@ class apache::redhat(
   # present and mod_proxy isn't...
   # we make sure it's empty to prevent it from being reinstalled with RPM upgrades
   file { "${apache::params::conf_dir}/conf.d/proxy_ajp.conf":
-    ensure => present,
+    ensure  => present,
     require => Package['apache'],
     content => '\n',
     notify  => Exec['apache-graceful'],

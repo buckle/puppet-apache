@@ -17,7 +17,7 @@ class apache::administration {
   $wwwuser    = $apache::params::http_user
 
   sudo::directive { 'apache-administration':
-    ensure => present,
+    ensure  => present,
     content => template('apache/sudoers.apache.erb'),
     require => Group['apache-admin'],
   }

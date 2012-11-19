@@ -45,14 +45,14 @@ Example usage:
 
 */
 define apache::balancer (
+  $vhost,
   $ensure='present',
   $location='',
   $proto='http',
   $members=[],
   $standbyurl='',
   $params=['retry=5'],
-  $filename='',
-  $vhost
+  $filename=''
 ) {
 
   # normalise name
@@ -83,6 +83,7 @@ define apache::balancer (
         apache::module {'proxy_ajp': }
       }
     }
+    default: {}
   }
 
   file{ "${name} balancer on ${vhost}":
