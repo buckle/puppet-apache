@@ -107,7 +107,6 @@ define apache::vhost_ssl (
   $admin='',
   $group='root',
   $mode=2570,
-  $config_template=false,
   $aliases=[],
   $ip_address='*',
   $cert=false,
