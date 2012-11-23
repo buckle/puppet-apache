@@ -1,6 +1,6 @@
 # file managed by puppet
 <% if sslonly != true -%>
-<%= scope.function_template("apache/vhost.erb") -%>
+<%= scope.function_template(["apache/vhost.erb"]) -%>
 
 <% end -%>
 <VirtualHost<% sslports.each do |port| -%> <%= port %><% end -%>>
