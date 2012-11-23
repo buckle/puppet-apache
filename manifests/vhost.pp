@@ -180,7 +180,7 @@ define apache::vhost (
 
           if $config_template != false{
             File["${apache::params::conf_dir}/sites-available/${name}"] {
-              content => template(["$config_template"]),
+              content => template("$config_template"),
             }
           } else {
             # default vhost template
