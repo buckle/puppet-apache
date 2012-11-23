@@ -1,5 +1,5 @@
 # file managed by puppet
-<% if sslonly != true -%>
+<% if scope.lookupvar('sslonly') != true -%>
 <%= scope.function_template(["apache/vhost.erb"]) -%>
 
 <% end -%>
