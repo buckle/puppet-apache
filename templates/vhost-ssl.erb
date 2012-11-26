@@ -28,11 +28,11 @@
 
   SSLEngine On
   SSLCipherSuite ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
-  SSLCertificateFile <%= certfile %>
-  SSLCertificateKeyFile <%= certkeyfile %>
-  SSLCACertificateFile <%= cacertfile %>
-<% if has_variable?("certchainfile") -%>
-  SSLCertificateChainFile <%= certchainfile %>
+  SSLCertificateFile <%= scope.lookupvar('certfile') %>
+  SSLCertificateKeyFile <%= scope.lookupvar('certkeyfile') %>
+  SSLCACertificateFile <%= scope.lookupvar('cacertfile') %>
+<% if has_variable?("scope.lookupvar('certchainfile')" -%>
+  SSLCertificateChainFile <%= scope.lookupvar('certchainfile') %>
 <% end -%>
 
 <% if cgipath -%>
