@@ -31,9 +31,9 @@
   SSLCertificateFile <%= scope.lookupvar('certfile') %>
   SSLCertificateKeyFile <%= scope.lookupvar('certkeyfile') %>
   SSLCACertificateFile <%= scope.lookupvar('cacertfile') %>
-<% if has_variable?("scope.lookupvar('certchainfile')" -%>
+<% if has_variable?("scope.lookupvar('certchainfile')") -%>
   SSLCertificateChainFile <%= scope.lookupvar('certchainfile') %>
-<%end -%>
+<% end -%>
 
 <% if cgipath -%>
   ScriptAlias /cgi-bin/ <%= cgipath %>
