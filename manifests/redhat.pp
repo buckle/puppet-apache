@@ -82,7 +82,7 @@ class apache::redhat(
   # Disable the welcome page, we make sure it's empty to prevent it from being reinstalled with RPM upgrades
   file { "${apache::params::conf_dir}/conf.d/welcome.conf":
     ensure  => present,
-    content => '\n',
+    content => "\n",
     require => Package['apache'],
     notify  => Exec['apache-graceful'],
   }
