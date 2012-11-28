@@ -3,7 +3,12 @@
 <%= scope.function_template(["apache/vhost.erb"]) -%>
 
 <% end -%>
-<VirtualHost<% "scope.lookupvar('apache::vhost_ssl::sslports')".each do |port| -%> <%= port %><% end -%>>
+<%
+$in_sslports = scope.lookupvar('sslports')
+%>
+#apache::vhost_ssl::sslports
+
+<VirtualHost<% @sslports.each do |port| -%> <%= port %><% end -%>>
   ServerName <%= name %>
 
 <% aliases.each do |serveralias| -%>
@@ -26,14 +31,21 @@
     allow from all
   </Directory>
 
+<%
+$in_certfile = scope.lookupvar('certfile')
+$in_certkeyfile = scope.lookupvar('certkeyfile')
+$in_cacertfile = scope.lookupvar('cacertfile')
+$in_certchainfile = scope.lookupvar('certchainfile')
+%>   
+
   SSLEngine On
   SSLCipherSuite ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
-  SSLCertificateFile <%= scope.lookupvar('certfile') %>
-  SSLCertificateKeyFile <%= scope.lookupvar('certkeyfile') %>
-  SSLCACertificateFile <%= scope.lookupvar('cacertfile') %>
-<% if has_variable?("scope.lookupvar('certchainfile')") -%>
-  SSLCertificateChainFile <%= scope.lookupvar('certchainfile') %>
-<% end -%>
+  SSLCertificateFile <%= @in_certfile %>
+  SSLCertificateKeyFile <%= @in_certkeyfile %>
+  SSLCACertificateFile <%= @in_cacertfile %>
+<% if @in_certchainfile %>
+  SSLCertificateChainFile <%= @in_certchainfile %>
+<% end %>
 
 <% if cgipath -%>
   ScriptAlias /cgi-bin/ <%= cgipath %>
