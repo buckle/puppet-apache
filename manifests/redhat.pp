@@ -138,7 +138,7 @@ class apache::redhat(
   file { "${apache::params::conf_dir}/conf.d/proxy_ajp.conf":
     ensure  => present,
     require => Package['apache'],
-    content => '\n',
+    content => '',
     notify  => Exec['apache-graceful'],
   }
 }
