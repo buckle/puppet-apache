@@ -40,9 +40,9 @@ $in_certchainfile = scope.lookupvar('certchainfile')
 
   SSLEngine On
   SSLCipherSuite ALL:!aNULL:!ADH:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
-  SSLCertificateFile <%= @in_certfile %>
-  SSLCertificateKeyFile <%= @in_certkeyfile %>
-  SSLCACertificateFile <%= @in_cacertfile %>
+  SSLCertificateFile <%= certfile %>
+  SSLCertificateKeyFile <%= certkeyfile %>
+  SSLCACertificateFile <%= cacertfile %>
 <% if @in_certchainfile %>
   SSLCertificateChainFile <%= @in_certchainfile %>
 <% end %>
