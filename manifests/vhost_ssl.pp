@@ -195,6 +195,7 @@ define apache::vhost_ssl (
     mode            => $mode,
     enable_default  => $enable_default,
     ports           => $ports,
+    sslports        => $sslports,
     recurse_source  => $recurse_source,
     accesslog_format=> $accesslog_format,
     allow_override  => $allow_override,
