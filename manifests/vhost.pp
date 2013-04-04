@@ -14,6 +14,7 @@ define apache::vhost (
   $aliases=[],
   $enable_default=true,
   $ports=['*:80'],
+  $sslports=['*:443'],
   $recurse_source = '',
   $accesslog_format='combined',
   $allow_override = 'None'
