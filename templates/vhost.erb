@@ -13,7 +13,7 @@
   ErrorLog <%= wwwroot %>/<%= name %>/logs/error.log
   CustomLog <%= wwwroot %>/<%= name %>/logs/access.log "<%= accesslog_format %>"
 
-<% if has_variable? ("redirect_to_ssl") and redirect_to_ssl == true -%>
+<% if @redirect_to_ssl == true -%>
   # Force SSL
   RewriteEngine On
   RewriteRule ^/(.*)$ https://<%= name %>/$1 [R]
