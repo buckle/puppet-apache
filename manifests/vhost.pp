@@ -17,7 +17,10 @@ define apache::vhost (
   $sslports=['*:443'],
   $recurse_source = '',
   $accesslog_format='combined',
-  $allow_override = 'None'
+  $allow_override = 'None',
+  $certfile = undef,
+  $certkeyfile = undef,
+  $csrfile = undef,
 ) {
 
   include apache::params
