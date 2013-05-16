@@ -56,6 +56,7 @@ class apache::base {
   file { 'Apache init script':
     ensure  => 'present',
     path    => '/etc/init.d/apache',
+    mode    => '0755',
   }
 
   service { 'apache':
