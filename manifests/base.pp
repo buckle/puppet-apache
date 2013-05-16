@@ -63,7 +63,7 @@ class apache::base {
     name       => $apache::params::package_name,
     enable     => true,
     hasrestart => true,
-    require    => Package['apache'],
+    require    => [Package['apache'],File['Apache init script']],
   }
 
   file { 'logrotate configuration':
