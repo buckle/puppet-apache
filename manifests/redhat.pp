@@ -31,6 +31,11 @@ class apache::redhat(
     ],
   }
 
+  File['Apache init script'] {
+    path    => '/etc/init.d/httpd',
+    source  => "puppet:///modules/${module_name}/httpd/apache.init",
+  }
+
   File['default status module configuration'] {
     path    => "${apache::params::conf_dir}/conf.d/status.conf",
     source  => 'puppet:///modules/apache/etc/httpd/conf/status.conf',

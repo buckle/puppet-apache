@@ -53,6 +53,11 @@ class apache::base {
     name   => $apache::params::package_name,
   }
 
+  file { 'Apache init script':
+    ensure  => 'present',
+    path    => '/etc/init.d/apache',
+  }
+
   service { 'apache':
     ensure     => 'running',
     name       => $apache::params::package_name,
