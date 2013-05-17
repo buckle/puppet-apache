@@ -33,7 +33,7 @@ class apache::redhat(
 
   File['Apache init script'] {
     path    => '/etc/init.d/httpd',
-    source  => "puppet:///modules/${module_name}/httpd/apache.init",
+    source  => "puppet:///modules/${module_name}/httpd/httpd.init",
   }
 
   File['default status module configuration'] {
