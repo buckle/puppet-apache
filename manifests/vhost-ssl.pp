@@ -94,28 +94,28 @@ Example usage:
 
 */
 
-define apache::vhost-ssl (
+define apache::vhost_ssl (
   $ensure=present,
-  $config_file="",
+  $config_file='',
   $config_template=false,
   $htdocs=false,
   $conf=false,
   $readme=false,
   $docroot=false,
   $cgibin=true,
-  $user="",
-  $admin=$admin,
-  $group="root",
+  $user='',
+  $admin='',
+  $group='root',
   $mode=2570,
   $config_template=false,
   $aliases=[],
-  $ip_address="*",
+  $ip_address='*',
   $cert=false,
   $certkey=false,
   $cacert=false,
   $certchain=false,
   $certcn=false,
-  $days="3650",
+  $days='3650',
   $publish_csr=false,
   $sslonly=false,
   $enable_default=true,
@@ -123,14 +123,14 @@ define apache::vhost-ssl (
   $sslports=['*:443'],
   $redirect_to_ssl=false,
   $recurse_source='',
-  $accesslog_format="combined",
-  $allow_override = "None"
+  $accesslog_format='combined',
+  $allow_override = 'None'
 ) {
 
   include apache::ssl
   # these 2 values are required to generate a valid SSL certificate.
-  if (!$sslcert_country) { $sslcert_country = "??" }
-  if (!$sslcert_organisation) { $sslcert_organisation = "undefined organisation" }
+  if (!$sslcert_country) { $sslcert_country = '??' }
+  if (!$sslcert_organisation) { $sslcert_organisation = 'undefined organisation' }
 
   if ($certcn != false ) { $sslcert_commonname = $certcn }
   else { $sslcert_commonname = $name }
@@ -138,7 +138,7 @@ define apache::vhost-ssl (
   include apache::params
 
   $wwwuser = $user ? {
-    ""      => $apache::params::http_user,
+    ''      => $apache::params::http_user,
     default => $user,
   }
 
@@ -166,8 +166,8 @@ define apache::vhost-ssl (
     $cacertfile = "${apache::params::root}/$name/ssl/cacert.crt"
   } else {
     $cacertfile = $operatingsystem ? {
-      /RedHat|CentOS/ => "/etc/pki/tls/certs/ca-bundle.crt",
-      Debian => "/etc/ssl/certs/ca-certificates.crt",
+      /RedHat|CentOS/ => '/etc/pki/tls/certs/ca-bundle.crt',
+      Debian => '/etc/ssl/certs/ca-certificates.crt',
     }
   }
 
@@ -181,7 +181,7 @@ define apache::vhost-ssl (
     ensure         => $ensure,
     config_file    => $config_file,
     config_template => $config_template ? {
-      false => "apache/vhost-ssl.erb",
+      false => 'apache/vhost-ssl.erb',
       default      => $config_template,
     },
     aliases        => $aliases,
@@ -200,7 +200,7 @@ define apache::vhost-ssl (
     allow_override	=> $allow_override,
   }
 
-  if $ensure == "present" {
+  if $ensure == 'present' {
     file { "${apache::params::root}/${name}/ssl":
       ensure => directory,
       owner  => "root",
