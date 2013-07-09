@@ -60,6 +60,14 @@ ServerTokens Prod
 ServerRoot "/etc/httpd"
 
 #
+# This is a PCI requirement
+# Newer versions of Apache (1.3.34 and 2.0.55 and later) provide a configuration directive called TraceEnable. To deny TRACE requests, add the following line to the server configuration:
+# TraceEnable off
+#
+# See https://jira.wsd.bucklehq.com/browse/SYSADMIN-1684
+TraceEnable off
+
+#
 # PidFile: The file in which the server should record its process
 # identification number when it starts.
 #
