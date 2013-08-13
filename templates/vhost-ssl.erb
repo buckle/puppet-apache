@@ -43,8 +43,8 @@ $in_certchainfile = scope.lookupvar('certchainfile')
   SSLCertificateFile <%= @certfile %>
   SSLCertificateKeyFile <%= @certkeyfile %>
   SSLCACertificateFile <%= @cacertfile %>
-<% if scope.lookupvar('certchainfile') %>
-  SSLCertificateChainFile <%= scope.lookupvar('certchainfile') %>
+<% if @certchainfile %>
+  SSLCertificateChainFile <%= @certchainfile %>
 <% end %>
 
 <% if cgipath -%>

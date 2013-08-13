@@ -201,6 +201,7 @@ define apache::vhost_ssl (
     allow_override  => $allow_override,
     certfile        => $certfile,
     certkeyfile     => $certkeyfile,
+    certchainfile   => $certchainfile,
     csrfile         => $csrfile,
   }
 
