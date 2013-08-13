@@ -174,7 +174,7 @@ define apache::vhost_ssl (
   if $certchain != false {
     $certchainfile = "${apache::params::root}/${name}/ssl/certchain.crt"
   } else {
-    $cerchainfile = undef
+    $cerchainfile = false
   }
 
 
