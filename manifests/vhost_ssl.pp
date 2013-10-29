@@ -173,6 +173,8 @@ define apache::vhost_ssl (
 
   if $certchain != false {
     $certchainfile = "${apache::params::root}/${name}/ssl/certchain.crt"
+  } else {
+    $cerchainfile = false
   }
 
 
@@ -201,6 +203,7 @@ define apache::vhost_ssl (
     allow_override  => $allow_override,
     certfile        => $certfile,
     certkeyfile     => $certkeyfile,
+    certchainfile   => $certchainfile,
     csrfile         => $csrfile,
   }
 

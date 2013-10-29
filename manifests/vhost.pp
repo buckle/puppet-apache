@@ -20,6 +20,7 @@ define apache::vhost (
   $allow_override = 'None',
   $certfile = undef,
   $certkeyfile = undef,
+  $certchainfile = undef,
   $csrfile = undef,
 ) {
 
