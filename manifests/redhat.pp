@@ -76,12 +76,18 @@ class apache::redhat(
     require => Package['apache'],
   }
 
+#  augeas { "select httpd mpm ${httpd_mpm}":
+#    lens    => 'Sysconfig.lns',
+#    incl    => '/etc/sysconfig/httpd',
+#    context => '/files/etc/sysconfig/httpd',
+#    changes => [ "set HTTPD /usr/sbin/${httpd_mpm}", ],
+#    onlyif  => "get HTTPD != /usr/sbin/${httpd_mpm}",
+#  }
+
   augeas { "select httpd mpm ${httpd_mpm}":
-    lens    => 'Sysconfig.lns',
-    incl    => '/etc/sysconfig/httpd',
-    context => '/files/etc/sysconfig/httpd',
-    changes => [ "set HTTPD /usr/sbin/${httpd_mpm}", ],
-    onlyif  => "get HTTPD != /usr/sbin/${httpd_mpm}",
+    changes => "set /files/etc/sysconfig/httpd/HTTPD /usr/sbin/${httpd_mpm}",
+    require => Package['apache'],
+    notify  => Service['apache'],
   }
 
   # Disable the welcome page, we make sure it's empty to prevent it from being reinstalled with RPM upgrades
