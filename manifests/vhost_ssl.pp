@@ -94,7 +94,7 @@ Example usage:
 
 */
 
-define apache::vhost-ssl (
+define apache::vhost_ssl (
   $ensure=present,
   $config_file="",
   $config_template=false,
