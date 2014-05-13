@@ -509,7 +509,7 @@ LogLevel warn
 # The following directives define some format nicknames for use with
 # a CustomLog directive (see below).
 #
-LogFormat "%h %{X-Forwarded-For}i %u %t %v %m %U %H %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %T" f5combined
+LogFormat "%h %{X-Forwarded-For}i %<u %t %v %m %U %H %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %D" f5combined
 LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
 LogFormat "%h %l %u %t \"%r\" %>s %b" common
 LogFormat "%{Referer}i -> %U" referer
@@ -526,7 +526,7 @@ LogFormat "%{User-agent}i" agent
 # define per-<VirtualHost> access logfiles, transactions will be
 # logged therein and *not* in this file.
 #
-CustomLog logs/access_log common
+CustomLog logs/access_log f5combined
 
 #
 # If you would like to have separate agent and referer logfiles, uncomment
@@ -539,7 +539,7 @@ CustomLog logs/access_log common
 # For a single logfile with access, agent, and referer information
 # (Combined Logfile Format), use the following directive:
 #
-CustomLog logs/access_log combined
+CustomLog logs/access_log f5combined
 
 #
 # Optionally add a line containing the server version and virtual host
