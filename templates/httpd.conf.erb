@@ -1021,5 +1021,8 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
 
+# Prevent click-jacking
+Header set X-Frame-Options SAMEORIGIN
+
 Include sites-enabled/
 
