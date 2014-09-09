@@ -1024,5 +1024,8 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 # Prevent click-jacking
 Header always append X-Frame-Options SAMEORIGIN
 
+# Remove inode information from ETag header
+FileETag MTime Size
+
 Include sites-enabled/
 
