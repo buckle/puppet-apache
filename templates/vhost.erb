@@ -16,9 +16,9 @@
 <% if @redirect_to_ssl == true -%>
   # Force SSL
   RewriteEngine On
-  <% if @no_forced_ssl_on_uri -%>
+<% if @no_forced_ssl_on_uri -%>
   RewriteCond %{REQUEST_URI} !<%= @no_forced_ssl_on_uri %>
-  <% end -%>
+<% end -%>
   RewriteRule ^/(.*)$ https://<%= name %>/$1 [R]
 <% end -%>
 
