@@ -121,6 +121,7 @@ define apache::vhost_ssl (
   $ports=['*:80'],
   $sslports=['*:443'],
   $redirect_to_ssl=false,
+  $no_forced_ssl_on_uri=undef,
   $recurse_source='',
   $accesslog_format='combined',
   $allow_override = 'None'

@@ -16,10 +16,13 @@
 <% if @redirect_to_ssl == true -%>
   # Force SSL
   RewriteEngine On
+  <% if @no_forced_ssl_on_uri -%>
+  RewriteCond %{REQUEST_URI} !<%= no_forced_ssl_on_uri %>
+  <% end -%>
   RewriteRule ^/(.*)$ https://<%= name %>/$1 [R]
-<% else -%>
-  Include <%= wwwroot %>/<%= name%>/conf/*.conf
 <% end -%>
+
+  Include <%= wwwroot %>/<%= name %>/conf/*.conf
 
   <Directory <%= documentroot %>>
     Options Indexes FollowSymLinks MultiViews
