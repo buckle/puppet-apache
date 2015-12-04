@@ -509,7 +509,9 @@ LogLevel warn
 # The following directives define some format nicknames for use with
 # a CustomLog directive (see below).
 #
-LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %h" f5combined
+LogFormat "%h %{X-Forwarded-For}i %<u %t %v %m %U %H %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %D" f5combined
+# %D denotes the time to fulfill the request in microseconds (1000 microseconds = 1 millisecond)
+LogFormat "{ \"@timestamp\": \"%{%Y-%m-%dT%H:%M:%S%z}t\", \"message\": \"%v %m %U\", \"remote_addr\": \"%h\", \"x_forwarded_for\": \"%{X-Forwarded-For}i\", \"remote_user\": \"%<u\", \"vhost\": \"%v\", \"request_method\": \"%m\", \"request_uri\": \"%U%q\", \"http_version\": \"%H\", \"status\": \"%>s\", \"body_bytes_sent\": \"%b\" , \"http_referer\": \"%{Referer}i\", \"http_user_agent\": \"%{User-Agent}i\", \"request_time\": \"%D\" }" f5combined_json
 LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
 LogFormat "%h %l %u %t \"%r\" %>s %b" common
 LogFormat "%{Referer}i -> %U" referer
@@ -526,7 +528,7 @@ LogFormat "%{User-agent}i" agent
 # define per-<VirtualHost> access logfiles, transactions will be
 # logged therein and *not* in this file.
 #
-CustomLog logs/access_log common
+CustomLog logs/access_log f5combined_json
 
 #
 # If you would like to have separate agent and referer logfiles, uncomment
@@ -539,7 +541,7 @@ CustomLog logs/access_log common
 # For a single logfile with access, agent, and referer information
 # (Combined Logfile Format), use the following directive:
 #
-CustomLog logs/access_log combined
+CustomLog logs/access_log f5combined_json
 
 #
 # Optionally add a line containing the server version and virtual host
@@ -1018,6 +1020,9 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #    ErrorLog logs/dummy-host.example.com-error_log
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
+
+# Remove inode information from ETag header
+FileETag MTime Size
 
 Include sites-enabled/
 

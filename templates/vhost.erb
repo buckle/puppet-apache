@@ -13,13 +13,16 @@
   ErrorLog <%= wwwroot %>/<%= name %>/logs/error.log
   CustomLog <%= wwwroot %>/<%= name %>/logs/access.log "<%= accesslog_format %>"
 
-<% if has_variable? ("redirect_to_ssl") and redirect_to_ssl == true -%>
+<% if @redirect_to_ssl == true -%>
   # Force SSL
   RewriteEngine On
-  RewriteRule ^/(.*)$ https://<%= name %>/$1 [R]
-<% else -%>
-  Include <%= wwwroot %>/<%= name%>/conf/*.conf
+<% if @no_forced_ssl_on_uri -%>
+  RewriteCond %{REQUEST_URI} !<%= @no_forced_ssl_on_uri %>
 <% end -%>
+  RewriteRule ^/(.*)$ https://<%= name %>/$1 [R]
+<% end -%>
+
+  Include <%= wwwroot %>/<%= name %>/conf/*.conf
 
   <Directory <%= documentroot %>>
     Options Indexes FollowSymLinks MultiViews

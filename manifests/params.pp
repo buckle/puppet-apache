@@ -1,6 +1,6 @@
 class apache::params {
 
-  case $operatingsystem {
+  case $::operatingsystem {
     'redhat', 'centos': {
       $package_name = 'httpd'
       $http_user = 'apache'
@@ -17,6 +17,7 @@ class apache::params {
       $root = '/var/www'
       $a2scripts_dir = '/usr/sbin'
     }
+    default: {}
   }
 
   $access_log = "${log_dir}/access_log"

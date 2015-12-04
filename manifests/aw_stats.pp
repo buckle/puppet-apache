@@ -1,4 +1,7 @@
-define apache::aw-stats($ensure=present, $aliases=[]) {
+define apache::aw_stats(
+  $ensure=present,
+  $aliases=[]
+) {
 
   include apache::params
 
@@ -7,24 +10,25 @@ define apache::aw-stats($ensure=present, $aliases=[]) {
 
   file { "/etc/awstats/awstats.${name}.conf":
     ensure  => $ensure,
-    content => template("apache/awstats.erb"),
-    require => [Package["apache"], Class["apache::awstats"]],
+    content => template('apache/awstats.erb'),
+    require => [Package['apache'], Class['apache::awstats']],
   }
 
   file { "${apache::params::root}/${name}/conf/awstats.conf":
     ensure  => $ensure,
     owner   => root,
     group   => root,
-    source  => $operatingsystem ? {
+    source  => $::operatingsystem ? {
       /RedHat|CentOS/ => "puppet:///modules/${module_name}/awstats.rh.conf",
       /Debian|Ubuntu/ => "puppet:///modules/${module_name}/awstats.deb.conf",
+      default         => undef,
     },
-    seltype => $operatingsystem ? {
-      "RedHat" => "httpd_config_t",
-      "CentOS" => "httpd_config_t",
+    seltype => $::operatingsystem ? {
+      'RedHat' => 'httpd_config_t',
+      'CentOS' => 'httpd_config_t',
       default  => undef,
     },
-    notify  => Exec["apache-graceful"],
+    notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$name],
   }
 }

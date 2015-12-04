@@ -1,9 +1,14 @@
 # file managed by puppet
-<% if sslonly != true -%>
-<%= scope.function_template("apache/vhost.erb") -%>
+<% if scope.lookupvar('sslonly') != true -%>
+<%= scope.function_template(["apache/vhost.erb"]) -%>
 
 <% end -%>
-<VirtualHost<% sslports.each do |port| -%> <%= port %><% end -%>>
+<%
+$in_sslports = scope.lookupvar('sslports')
+%>
+#apache::vhost_ssl::sslports
+
+<VirtualHost<% @sslports.each do |port| -%> <%= port %><% end -%>>
   ServerName <%= name %>
 
 <% aliases.each do |serveralias| -%>
@@ -26,14 +31,21 @@
     allow from all
   </Directory>
 
+<%
+$in_certfile = scope.lookupvar('certfile')
+$in_certkeyfile = scope.lookupvar('certkeyfile')
+$in_cacertfile = scope.lookupvar('cacertfile')
+$in_certchainfile = scope.lookupvar('certchainfile')
+%>   
+
   SSLEngine On
-  SSLCipherSuite ALL:!aNULL:!eNULL:!LOW:!EXP:RC4+RSA:+HIGH:+MEDIUM
-  SSLCertificateFile <%= certfile %>
-  SSLCertificateKeyFile <%= certkeyfile %>
-  SSLCACertificateFile <%= cacertfile %>
-<% if has_variable?("certchainfile") -%>
-  SSLCertificateChainFile <%= certchainfile %>
-<% end -%>
+  SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS:!kEDH
+  SSLCertificateFile <%= @certfile %>
+  SSLCertificateKeyFile <%= @certkeyfile %>
+  SSLCACertificateFile <%= @cacertfile %>
+<% if @certchainfile %>
+  SSLCertificateChainFile <%= @certchainfile %>
+<% end %>
 
 <% if cgipath -%>
   ScriptAlias /cgi-bin/ <%= cgipath %>
