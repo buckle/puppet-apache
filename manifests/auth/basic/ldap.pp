@@ -29,6 +29,20 @@ define apache::auth::basic::ldap (
     apache::module {'authnz_ldap': }
   }
 
+  # Set up LDAPS
+  file { "${apache::conf_dir}/ldaps.conf":
+    ensure      => $ensure,
+    content     => "#File managed by puppet
+LDAPVerifyServerCert off
+LDAPTrustedMode SSL",
+    seltype     => $::operatingsystem ? {
+      'RedHat'  => 'httpd_config_t',
+      'CentOS'  => 'httpd_config_t',
+      default   => undef,
+    },
+    notify      => Exec['apache-graceful'],
+  }
+
   file { "${apache::params::root}/${vhost}/conf/auth-basic-ldap-${fname}.conf":
     ensure      => $ensure,
     content     => template('apache/auth-basic-ldap.erb'),
