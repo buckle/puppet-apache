@@ -30,7 +30,7 @@ define apache::auth::basic::ldap (
   }
 
   # Set up LDAPS
-  file { "${apache::conf_dir}/ldaps.conf":
+  file { "${apache::params::conf_dir}/ldaps.conf":
     ensure      => $ensure,
     content     => "#File managed by puppet
 LDAPVerifyServerCert off
